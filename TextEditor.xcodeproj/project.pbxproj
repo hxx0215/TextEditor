@@ -1,0 +1,455 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B9A9A28619036B4E005A9499 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28519036B4E005A9499 /* Foundation.framework */; };
+		B9A9A28819036B4E005A9499 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28719036B4E005A9499 /* CoreGraphics.framework */; };
+		B9A9A28A19036B4E005A9499 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28919036B4E005A9499 /* UIKit.framework */; };
+		B9A9A29019036B4E005A9499 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9A9A28E19036B4E005A9499 /* InfoPlist.strings */; };
+		B9A9A29219036B4E005A9499 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A9A29119036B4E005A9499 /* main.m */; };
+		B9A9A29619036B4E005A9499 /* KDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A9A29519036B4E005A9499 /* KDAppDelegate.m */; };
+		B9A9A29819036B4E005A9499 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9A9A29719036B4E005A9499 /* Images.xcassets */; };
+		B9A9A29F19036B4E005A9499 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A29E19036B4E005A9499 /* XCTest.framework */; };
+		B9A9A2A019036B4E005A9499 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28519036B4E005A9499 /* Foundation.framework */; };
+		B9A9A2A119036B4E005A9499 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28919036B4E005A9499 /* UIKit.framework */; };
+		B9A9A2A919036B4E005A9499 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9A9A2A719036B4E005A9499 /* InfoPlist.strings */; };
+		B9A9A2AB19036B4E005A9499 /* TextEditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A9A2AA19036B4E005A9499 /* TextEditorTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B9A9A2A219036B4E005A9499 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B9A9A27A19036B4E005A9499 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9A9A28119036B4E005A9499;
+			remoteInfo = TextEditor;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B9A9A28219036B4E005A9499 /* TextEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9A9A28519036B4E005A9499 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B9A9A28719036B4E005A9499 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B9A9A28919036B4E005A9499 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B9A9A28D19036B4E005A9499 /* TextEditor-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TextEditor-Info.plist"; sourceTree = "<group>"; };
+		B9A9A28F19036B4E005A9499 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B9A9A29119036B4E005A9499 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B9A9A29319036B4E005A9499 /* TextEditor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TextEditor-Prefix.pch"; sourceTree = "<group>"; };
+		B9A9A29419036B4E005A9499 /* KDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KDAppDelegate.h; sourceTree = "<group>"; };
+		B9A9A29519036B4E005A9499 /* KDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KDAppDelegate.m; sourceTree = "<group>"; };
+		B9A9A29719036B4E005A9499 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B9A9A29D19036B4E005A9499 /* TextEditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TextEditorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9A9A29E19036B4E005A9499 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B9A9A2A619036B4E005A9499 /* TextEditorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TextEditorTests-Info.plist"; sourceTree = "<group>"; };
+		B9A9A2A819036B4E005A9499 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B9A9A2AA19036B4E005A9499 /* TextEditorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextEditorTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B9A9A27F19036B4E005A9499 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A28819036B4E005A9499 /* CoreGraphics.framework in Frameworks */,
+				B9A9A28A19036B4E005A9499 /* UIKit.framework in Frameworks */,
+				B9A9A28619036B4E005A9499 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9A9A29A19036B4E005A9499 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A29F19036B4E005A9499 /* XCTest.framework in Frameworks */,
+				B9A9A2A119036B4E005A9499 /* UIKit.framework in Frameworks */,
+				B9A9A2A019036B4E005A9499 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B9A9A27919036B4E005A9499 = {
+			isa = PBXGroup;
+			children = (
+				B9A9A28B19036B4E005A9499 /* TextEditor */,
+				B9A9A2A419036B4E005A9499 /* TextEditorTests */,
+				B9A9A28419036B4E005A9499 /* Frameworks */,
+				B9A9A28319036B4E005A9499 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B9A9A28319036B4E005A9499 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A28219036B4E005A9499 /* TextEditor.app */,
+				B9A9A29D19036B4E005A9499 /* TextEditorTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B9A9A28419036B4E005A9499 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A28519036B4E005A9499 /* Foundation.framework */,
+				B9A9A28719036B4E005A9499 /* CoreGraphics.framework */,
+				B9A9A28919036B4E005A9499 /* UIKit.framework */,
+				B9A9A29E19036B4E005A9499 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9A9A28B19036B4E005A9499 /* TextEditor */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A29419036B4E005A9499 /* KDAppDelegate.h */,
+				B9A9A29519036B4E005A9499 /* KDAppDelegate.m */,
+				B9A9A29719036B4E005A9499 /* Images.xcassets */,
+				B9A9A28C19036B4E005A9499 /* Supporting Files */,
+			);
+			path = TextEditor;
+			sourceTree = "<group>";
+		};
+		B9A9A28C19036B4E005A9499 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A28D19036B4E005A9499 /* TextEditor-Info.plist */,
+				B9A9A28E19036B4E005A9499 /* InfoPlist.strings */,
+				B9A9A29119036B4E005A9499 /* main.m */,
+				B9A9A29319036B4E005A9499 /* TextEditor-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B9A9A2A419036B4E005A9499 /* TextEditorTests */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A2AA19036B4E005A9499 /* TextEditorTests.m */,
+				B9A9A2A519036B4E005A9499 /* Supporting Files */,
+			);
+			path = TextEditorTests;
+			sourceTree = "<group>";
+		};
+		B9A9A2A519036B4E005A9499 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B9A9A2A619036B4E005A9499 /* TextEditorTests-Info.plist */,
+				B9A9A2A719036B4E005A9499 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B9A9A28119036B4E005A9499 /* TextEditor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9A9A2AE19036B4E005A9499 /* Build configuration list for PBXNativeTarget "TextEditor" */;
+			buildPhases = (
+				B9A9A27E19036B4E005A9499 /* Sources */,
+				B9A9A27F19036B4E005A9499 /* Frameworks */,
+				B9A9A28019036B4E005A9499 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TextEditor;
+			productName = TextEditor;
+			productReference = B9A9A28219036B4E005A9499 /* TextEditor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B9A9A29C19036B4E005A9499 /* TextEditorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9A9A2B119036B4E005A9499 /* Build configuration list for PBXNativeTarget "TextEditorTests" */;
+			buildPhases = (
+				B9A9A29919036B4E005A9499 /* Sources */,
+				B9A9A29A19036B4E005A9499 /* Frameworks */,
+				B9A9A29B19036B4E005A9499 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B9A9A2A319036B4E005A9499 /* PBXTargetDependency */,
+			);
+			name = TextEditorTests;
+			productName = TextEditorTests;
+			productReference = B9A9A29D19036B4E005A9499 /* TextEditorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B9A9A27A19036B4E005A9499 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = KD;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = hxx;
+				TargetAttributes = {
+					B9A9A29C19036B4E005A9499 = {
+						TestTargetID = B9A9A28119036B4E005A9499;
+					};
+				};
+			};
+			buildConfigurationList = B9A9A27D19036B4E005A9499 /* Build configuration list for PBXProject "TextEditor" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B9A9A27919036B4E005A9499;
+			productRefGroup = B9A9A28319036B4E005A9499 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9A9A28119036B4E005A9499 /* TextEditor */,
+				B9A9A29C19036B4E005A9499 /* TextEditorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B9A9A28019036B4E005A9499 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A29019036B4E005A9499 /* InfoPlist.strings in Resources */,
+				B9A9A29819036B4E005A9499 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9A9A29B19036B4E005A9499 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A2A919036B4E005A9499 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B9A9A27E19036B4E005A9499 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A29219036B4E005A9499 /* main.m in Sources */,
+				B9A9A29619036B4E005A9499 /* KDAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9A9A29919036B4E005A9499 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A9A2AB19036B4E005A9499 /* TextEditorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B9A9A2A319036B4E005A9499 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9A9A28119036B4E005A9499 /* TextEditor */;
+			targetProxy = B9A9A2A219036B4E005A9499 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B9A9A28E19036B4E005A9499 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9A9A28F19036B4E005A9499 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B9A9A2A719036B4E005A9499 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9A9A2A819036B4E005A9499 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B9A9A2AC19036B4E005A9499 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9A9A2AD19036B4E005A9499 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B9A9A2AF19036B4E005A9499 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextEditor/TextEditor-Prefix.pch";
+				INFOPLIST_FILE = "TextEditor/TextEditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B9A9A2B019036B4E005A9499 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextEditor/TextEditor-Prefix.pch";
+				INFOPLIST_FILE = "TextEditor/TextEditor-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B9A9A2B219036B4E005A9499 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TextEditor.app/TextEditor";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextEditor/TextEditor-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "TextEditorTests/TextEditorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B9A9A2B319036B4E005A9499 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TextEditor.app/TextEditor";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TextEditor/TextEditor-Prefix.pch";
+				INFOPLIST_FILE = "TextEditorTests/TextEditorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B9A9A27D19036B4E005A9499 /* Build configuration list for PBXProject "TextEditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9A9A2AC19036B4E005A9499 /* Debug */,
+				B9A9A2AD19036B4E005A9499 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9A9A2AE19036B4E005A9499 /* Build configuration list for PBXNativeTarget "TextEditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9A9A2AF19036B4E005A9499 /* Debug */,
+				B9A9A2B019036B4E005A9499 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B9A9A2B119036B4E005A9499 /* Build configuration list for PBXNativeTarget "TextEditorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9A9A2B219036B4E005A9499 /* Debug */,
+				B9A9A2B319036B4E005A9499 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B9A9A27A19036B4E005A9499 /* Project object */;
+}

@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KDTextEditorDelegate.h"
+
 @class KDTableViewController;
 
-@interface KDTextEditorViewController : UIViewController
+@interface KDTextEditorViewController : UIViewController <KDTextEditorViewControllerDelegate>
 
-@property (nonatomic,strong)UITextView *textView;
+@property (nonatomic, strong) UITextView *textView;
 
 @end

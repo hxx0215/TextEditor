@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KDTableViewControllerDelegate.h"
+#import "KDTextEditorDelegate.h"
 
 @interface KDFontSizeViewController : UIViewController
 

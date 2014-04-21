@@ -15,6 +15,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) KDTextEditorViewController *viewController;
-@property (strong, nonatomic) KDNavigationViewController *navController;
+@property (strong, nonatomic) UINavigationController *navController;
 
 @end

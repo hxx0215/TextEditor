@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KDTableViewControllerDelegate.h"
+#import "KDTextEditorDelegate.h"
 
 typedef enum {
 	KDTableOptionGeneral,
@@ -21,7 +21,7 @@ typedef enum {
 
 @property (nonatomic, assign) NSObject <KDTableViewControllerDelegate> *delegate;
 @property (nonatomic, retain) NSMutableDictionary *allOptions;
-
+@property (nonatomic, assign) NSObject <KDTextEditorViewControllerDelegate> *vcdelegete;
 - (id)initWithOption:(KDTableOption)option;
 
 

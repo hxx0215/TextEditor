@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class KDTextEditorViewController;
+@class KDNavigationViewController;
+
 @interface KDAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) KDTextEditorViewController *viewController;
+@property (strong, nonatomic) KDNavigationViewController *navController;
 
 @end

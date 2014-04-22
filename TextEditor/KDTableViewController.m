@@ -7,7 +7,7 @@
 //
 
 #import "KDTableViewController.h"
-//#import "KDTableViewControllerDelegate.h"
+
 #import "KDFontSizeViewController.h"
 
 @interface KDTableViewController ()
@@ -27,7 +27,7 @@
 - (id)initWithOption:(KDTableOption)option {
 	self = [super init];
 	if (self) {
-		// Custom initialization
+
 		_option = option;
 		if (!_allOptions) _allOptions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", @"字体", @"", @"大小", @"", @"对齐方式", nil];
 		if (KDTableOptionGeneral == option) {
@@ -57,11 +57,6 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 
-	// Uncomment the following line to preserve selection between presentations.
-	// self.clearsSelectionOnViewWillAppear = NO;
-
-	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-	// self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	if (KDTableOptionFont == _option) {
 		_editButton = [[UIBarButtonItem alloc]
 		               initWithTitle:@"编辑"
@@ -124,13 +119,10 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	// Return the number of sections.
-	return 1;
-}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	// Return the number of rows in the section.
+
 	return [_settingList count];
 }
 
@@ -143,7 +135,7 @@
 	if (0 == indexPath.section) {
 		NSUInteger row = [indexPath row];
 		cell.textLabel.text = [_settingList objectAtIndex:row];
-		//cell.detailTextLabel.text = @"详细信息";
+
 		if (KDTableOptionGeneral == _option) {
 			cell.detailTextLabel.text = [_allOptions objectForKey:cell.textLabel.text];
 		}
@@ -208,12 +200,12 @@
 
 		[self.navigationController popViewControllerAnimated:YES];
 	}
-	//[tableView reloadData];
+
 }
 
-// Override to support conditional rearranging of the table view.
+
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Return NO if you do not want the item to be re-orderable.
+
 	return YES;
 }
 
@@ -238,7 +230,6 @@
 		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
 		if (UITableViewCellAccessoryCheckmark == cell.accessoryType) {
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"警告" message:@"你无法删除已选字体" delegate:self cancelButtonTitle:@"好" otherButtonTitles:nil] autorelease];
-			// optional - add more buttons:
 			[alert show];
 			return;
 		}
@@ -267,10 +258,19 @@
     return YES;
    }
  */
+/*
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+ if (0 == [indexPath section])
+ {
+ if (UITableViewCellAccessoryCheckmark == cell.accessoryType) return NO;
+ }
+ return YES;
+ }
 
-
-
-
+*/
 /*
    #pragma mark - Navigation
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B96602CA19064DA5001B6571 /* KDColorPickViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96602C919064DA5001B6571 /* KDColorPickViewController.m */; };
 		B9A9A28619036B4E005A9499 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28519036B4E005A9499 /* Foundation.framework */; };
 		B9A9A28819036B4E005A9499 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28719036B4E005A9499 /* CoreGraphics.framework */; };
 		B9A9A28A19036B4E005A9499 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A9A28919036B4E005A9499 /* UIKit.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B96602C819064DA5001B6571 /* KDColorPickViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDColorPickViewController.h; sourceTree = "<group>"; };
+		B96602C919064DA5001B6571 /* KDColorPickViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KDColorPickViewController.m; sourceTree = "<group>"; };
 		B9A9A28219036B4E005A9499 /* TextEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9A9A28519036B4E005A9499 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9A9A28719036B4E005A9499 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -127,6 +130,8 @@
 				B9C01E381904A95200AB11EC /* KDTableViewController.m */,
 				B9C01E3B1904EF2000AB11EC /* KDFontSizeViewController.h */,
 				B9C01E3C1904EF2000AB11EC /* KDFontSizeViewController.m */,
+				B96602C819064DA5001B6571 /* KDColorPickViewController.h */,
+				B96602C919064DA5001B6571 /* KDColorPickViewController.m */,
 				B9A9A28C19036B4E005A9499 /* Supporting Files */,
 			);
 			path = TextEditor;
@@ -259,6 +264,7 @@
 			files = (
 				B9C01E391904A95200AB11EC /* KDTableViewController.m in Sources */,
 				B9A9A29219036B4E005A9499 /* main.m in Sources */,
+				B96602CA19064DA5001B6571 /* KDColorPickViewController.m in Sources */,
 				B9A9A29619036B4E005A9499 /* KDAppDelegate.m in Sources */,
 				B9A9A2B619036E11005A9499 /* KDTextEditorViewController.m in Sources */,
 				B9C01E3D1904EF2000AB11EC /* KDFontSizeViewController.m in Sources */,

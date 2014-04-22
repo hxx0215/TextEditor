@@ -8,6 +8,7 @@
 
 #import "KDTextEditorViewController.h"
 #import "KDTableViewController.h"
+#import "KDColorPickViewController.h"
 @interface KDTextEditorViewController ()
 {
 	NSMutableDictionary *_allOptions;
@@ -31,12 +32,17 @@
 	self.title = @"TextEditor";
 
 	UIBarButtonItem *settingButton = [[UIBarButtonItem alloc]
-	                                  initWithTitle:@"settings"
+	                                  initWithTitle:@"设置"
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
 	                                         action:@selector(buttonClicked_setting:)];
 
 	self.navigationItem.rightBarButtonItem = settingButton;
+    
+    UIBarButtonItem *colorButton = [[UIBarButtonItem alloc]
+                                    initWithTitle:@"颜色" style:UIBarButtonItemStylePlain
+                                    target:self action:@selector(buttonClicked_color:)];
+    self.navigationItem.leftBarButtonItem = colorButton;
 
 	self.textView = [[UITextView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:self.textView];
@@ -48,6 +54,20 @@
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
+}
+- (void)buttonClicked_setting:(id)sender {
+	KDTableViewController *tTableVC = [[KDTableViewController alloc] initWithOption:KDTableOptionGeneral];
+	tTableVC.vcdelegete = self;
+    
+	tTableVC.allOptions = _allOptions;
+	[self.navigationController pushViewController:tTableVC animated:YES];
+	[tTableVC release];
+}
+
+- (void)buttonClicked_color:(id)sender{
+    KDColorPickViewController *tColorPickVC = [[KDColorPickViewController alloc] init];
+    [self.navigationController pushViewController:tColorPickVC animated:YES];
+    [tColorPickVC release];
 }
 
 - (void)addDismissButtontoKeyBoard {
@@ -71,14 +91,7 @@
 	[self.textView resignFirstResponder];
 }
 
-- (void)buttonClicked_setting:(id)sender {
-	KDTableViewController *tTableVC = [[KDTableViewController alloc] initWithOption:KDTableOptionGeneral];
-	tTableVC.vcdelegete = self;
 
-	tTableVC.allOptions = _allOptions;
-	[self.navigationController pushViewController:tTableVC animated:YES];
-	[tTableVC release];
-}
 
 - (void)changeTextFont:(NSMutableDictionary *)dict {
 	//NSLog(@"protocol");

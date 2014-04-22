@@ -12,8 +12,11 @@
 
 @interface KDTableViewController ()
 {
-	NSArray *_settingList;
+	NSMutableArray *_settingList;
 	KDTableOption _option;
+	UIBarButtonItem *_editButton;
+	UIBarButtonItem *_resetFontButton;
+	BOOL _editStatus;
 }
 @end
 
@@ -28,15 +31,23 @@
 		_option = option;
 		if (!_allOptions) _allOptions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", @"字体", @"", @"大小", @"", @"对齐方式", nil];
 		if (KDTableOptionGeneral == option) {
-			_settingList = [[NSArray alloc] initWithObjects:@"字体", @"大小", @"对齐方式", nil];
+			_settingList = [[NSMutableArray alloc] initWithObjects:@"字体", @"大小", @"对齐方式", nil];
 			self.navigationItem.title = @"设置";
 		}
 		if (KDTableOptionFont == option) {
-			_settingList = [[NSArray alloc] initWithArray:[UIFont familyNames]];
+			NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
+			[tDefaults synchronize];
+			if (![tDefaults objectForKey:@"kTextEditorFontSet"]) {
+				NSMutableArray *tFontSet = [[NSMutableArray alloc] initWithArray:[UIFont familyNames]];
+				[tDefaults setObject:tFontSet forKey:@"kTextEditorFontSet"];
+				[tDefaults synchronize];
+				[tFontSet release];
+			}
+			_settingList = [[NSMutableArray alloc] initWithArray:[tDefaults objectForKey:@"kTextEditorFontSet"]];
 			self.navigationItem.title = @"字体";
 		}
 		if (KDTableOptionTextAlignment == option) {
-			_settingList = [[NSArray alloc] initWithObjects:@"左对齐", @"右对齐", @"居中", nil];
+			_settingList = [[NSMutableArray alloc] initWithObjects:@"左对齐", @"右对齐", @"居中", nil];
 			self.navigationItem.title = @"对齐方式";
 		}
 	}
@@ -51,6 +62,45 @@
 
 	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 	// self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	if (KDTableOptionFont == _option) {
+		_editButton = [[UIBarButtonItem alloc]
+		               initWithTitle:@"编辑"
+		                       style:UIBarButtonItemStylePlain
+		                      target:self
+		                      action:@selector(buttonClicked_edit:)];
+		self.navigationItem.rightBarButtonItem = _editButton;
+		_editStatus = YES;
+	}
+}
+
+- (void)buttonClicked_edit:(id)sender {
+	if (_editStatus) {
+		_editButton.title = @"完成";
+		_resetFontButton = [[UIBarButtonItem alloc]
+		                    initWithTitle:@"重置"
+		                            style:UIBarButtonItemStylePlain
+		                           target:self
+		                           action:@selector(buttonClicked_reset:)];
+		self.navigationItem.leftBarButtonItem = _resetFontButton;
+	}
+	else {
+		_editButton.title = @"编辑";
+		self.navigationItem.leftBarButtonItem = nil;
+	}
+	[self.tableView setEditing:_editStatus animated:YES];
+	_editStatus = !_editStatus;
+}
+
+- (void)buttonClicked_reset:(id)sender {
+	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
+	[tDefaults synchronize];
+	NSMutableArray *tFontSet = [[NSMutableArray alloc] initWithArray:[UIFont familyNames]];
+	[tDefaults setObject:tFontSet forKey:@"kTextEditorFontSet"];
+	[tDefaults synchronize];
+	[tFontSet release];
+	[_settingList release];
+	_settingList = [[NSMutableArray alloc] initWithArray:[tDefaults objectForKey:@"kTextEditorFontSet"]];
+	[self.tableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -65,6 +115,11 @@
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
+}
+
+- (void)optionSetForKey:(NSString *)key value:(NSString *)value {
+	[_allOptions setObject:value forKey:key];
+	[self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -96,11 +151,10 @@
 			NSString *tKey;
 			if (KDTableOptionTextAlignment == _option)
 				tKey = @"对齐方式";
-			else
-            {
-                tKey = @"字体";
-                cell.textLabel.font = [UIFont fontWithName:cell.textLabel.text size:20.0];
-            }
+			else {
+				tKey = @"字体";
+				cell.textLabel.font = [UIFont fontWithName:cell.textLabel.text size:20.0];
+			}
 			if ([cell.textLabel.text isEqualToString:[_allOptions objectForKey:tKey]]) {
 				cell.accessoryType = UITableViewCellAccessoryCheckmark;
 			}
@@ -157,14 +211,51 @@
 	//[tableView reloadData];
 }
 
-- (void)optionSetForKey:(NSString *)key value:(NSString *)value {
-	[_allOptions setObject:value forKey:key];
-	[self.tableView reloadData];
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+	// Return NO if you do not want the item to be re-orderable.
+	return YES;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+	NSUInteger tFromRow = [fromIndexPath row];
+	NSUInteger tToRow = [toIndexPath row];
+
+	id object = [[_settingList objectAtIndex:tFromRow] retain];
+	[_settingList removeObject:object];
+	[_settingList insertObject:object atIndex:tToRow];
+	[object release];
+
+	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
+	[tDefaults synchronize];
+	[tDefaults setObject:_settingList forKey:@"kTextEditorFontSet"];
+	[tDefaults synchronize];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		NSUInteger row = [indexPath row];
+		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+		if (UITableViewCellAccessoryCheckmark == cell.accessoryType) {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"警告" message:@"你无法删除已选字体" delegate:self cancelButtonTitle:@"好" otherButtonTitles:nil] autorelease];
+			// optional - add more buttons:
+			[alert show];
+			return;
+		}
+		[_settingList removeObjectAtIndex:row];
+		NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
+		[tDefaults synchronize];
+		[tDefaults setObject:_settingList forKey:@"kTextEditorFontSet"];
+		[tDefaults synchronize];
+		[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+	}
 }
 
 - (void)dealloc {
 	[_allOptions release];
 	[_settingList release];
+	[_editButton release];
+	[_resetFontButton release];
 	[super dealloc];
 }
 
@@ -177,34 +268,8 @@
    }
  */
 
-/*
-   // Override to support editing the table view.
-   - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-   {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }
-   }
- */
 
-/*
-   // Override to support rearranging the table view.
-   - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-   {
-   }
- */
 
-/*
-   // Override to support conditional rearranging of the table view.
-   - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-   {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-   }
- */
 
 /*
    #pragma mark - Navigation

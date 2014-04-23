@@ -12,11 +12,12 @@
 
 @interface KDTextEditorViewController ()
 {
-	NSMutableDictionary *_allOptions;
 	UIPickerView *_fontPicker;
 	NSArray *_pickerArray;
 	CGFloat _fontSize;
 	NSString *_fontName;
+    CGFloat _pickerOriginY;
+    CGFloat _pickerY;
 }
 @end
 
@@ -53,6 +54,7 @@
 	self.textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
 	self.textView.delegate = self;
 	[self.view addSubview:self.textView];
+    _pickerOriginY = INFINITY;
 
 	NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
 	UISegmentedControl *segmented = [[UISegmentedControl alloc]initWithItems:array];
@@ -62,7 +64,7 @@
 	    forControlEvents:UIControlEventValueChanged];
 	segmented.selectedSegmentIndex = 0;
 	self.navigationItem.titleView = segmented;
-    [segmented release];
+	[segmented release];
 
 	UIBarButtonItem *fontSizeButton = [[UIBarButtonItem alloc]
 	                                   initWithTitle:@"字体大小"
@@ -76,30 +78,31 @@
 	_fontPicker.showsSelectionIndicator = YES;
 	_fontPicker.delegate = self;
 	_fontPicker.dataSource = self;
-    _fontPicker.hidden = YES;
+	_fontPicker.hidden = YES;
 	[_fontPicker selectRow:4 inComponent:0 animated:YES];
 	[self.textView addSubview:_fontPicker];
-	[self addDismissButtontoKeyBoard];
+	if ([self isiPhone]) {
+		[self addDismissButtontoKeyBoard];
+	}
 }
 
 - (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
-    CGRect tScreen = [UIScreen mainScreen].bounds;
-    CGFloat tFontPickerHeight = 216;
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
-    {
-        CGFloat exchange = tScreen.size.height;
-        tScreen.size.height = tScreen.size.width;
-        tScreen.size.width = exchange;
-    }
-    
-    _fontPicker.frame = CGRectMake(0, tScreen.size.height -tFontPickerHeight, tScreen.size.width, tFontPickerHeight);
-    
-    self.textView.frame = tScreen;
+	CGRect tScreen = [UIScreen mainScreen].bounds;
+	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+		CGFloat exchange = tScreen.size.height;
+		tScreen.size.height = tScreen.size.width;
+		tScreen.size.width = exchange;
+	}
+	CGFloat tFontPickerHeight = 216;
+    _pickerY = tScreen.size.height - tFontPickerHeight;
+	_fontPicker.frame = CGRectMake(0, _pickerY+(self.textView.contentOffset.y - _pickerOriginY), tScreen.size.width, tFontPickerHeight);
+
+	self.textView.frame = tScreen;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-    
+
 	UIInterfaceOrientation tToInterfaceO = [UIApplication sharedApplication].statusBarOrientation;
 	[self updateCurInterface:tToInterfaceO];
 }
@@ -114,16 +117,16 @@
 	tTableVC.fontNameDelegate = self;
 
 	tTableVC.fontName = _fontName;
-    
-    tTableVC.modalViewdelegate = self;
-    
-    KDTextEditorNavigationController *navController = [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
-    [tTableVC release];
-    
-    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:navController animated:YES completion:nil];
+
+	tTableVC.modalViewdelegate = self;
+
+	KDTextEditorNavigationController *navController = [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
+	[tTableVC release];
+
+	navController.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentViewController:navController animated:YES completion:nil];
 	//[self.navigationController pushViewController:tTableVC animated:YES];
-    [navController release];
+	[navController release];
 }
 
 - (void)buttonClicked_Segment:(id)sender {
@@ -159,7 +162,7 @@
 
 - (void)buttonClicked_FontSize:(id)sender {
 	[self.textView resignFirstResponder];
-    _fontPicker.hidden = NO;
+	_fontPicker.hidden = NO;
 }
 
 - (void)addDismissButtontoKeyBoard {
@@ -194,10 +197,17 @@
 
 #pragma mark - TextView Delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    _fontPicker.hidden = YES;
+	_fontPicker.hidden = YES;
 	return YES;
 }
-
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (INFINITY == _pickerOriginY)
+        _pickerOriginY = self.textView.contentOffset.y;
+    CGRect tFrame = _fontPicker.frame;
+    tFrame.origin.y = _pickerY+(self.textView.contentOffset.y - _pickerOriginY);
+    _fontPicker.frame = tFrame;
+}
 #pragma mark - rotate
 
 - (BOOL)shouldAutorotate {
@@ -235,14 +245,18 @@
 }
 
 #pragma mark - Modal View Delegate
-- (void)didDismissModalView
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)didDismissModalView {
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)isiPhone {
+	return [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone;
 }
 
 - (void)dealloc {
-	[_allOptions release];
 	[_textView release];
+    [_fontPicker release];
+    [_pickerArray release];
 	[super dealloc];
 }
 

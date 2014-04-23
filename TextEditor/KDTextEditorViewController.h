@@ -11,7 +11,11 @@
 
 @class KDTableViewController;
 
-@interface KDTextEditorViewController : UIViewController <KDTextEditorViewControllerDelegate>
+@interface KDTextEditorViewController : UIViewController <KDTextEditorViewControllerDelegate,
+	                                                      ModalViewControllerDelegate,
+	                                                      UIPickerViewDelegate,
+	                                                      UIPickerViewDataSource,
+	                                                      UITextViewDelegate>
 
 @property (nonatomic, strong) UITextView *textView;
 

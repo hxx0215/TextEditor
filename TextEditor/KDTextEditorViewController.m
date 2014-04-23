@@ -8,10 +8,15 @@
 
 #import "KDTextEditorViewController.h"
 #import "KDTableViewController.h"
-#import "KDColorPickViewController.h"
+#import "KDTextEditorNavigationController.h"
+
 @interface KDTextEditorViewController ()
 {
 	NSMutableDictionary *_allOptions;
+	UIPickerView *_fontPicker;
+	NSArray *_pickerArray;
+	CGFloat _fontSize;
+	NSString *_fontName;
 }
 @end
 
@@ -21,7 +26,12 @@
 - (id)init {
 	self = [super init];
 	if (self) {
-		_allOptions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"Helvetica", @"字体", @"12", @"大小", @"左对齐", @"对齐方式", nil];
+		_pickerArray = [[NSArray alloc]initWithObjects:@"8", @"9", @"10", @"11",
+		                @"12", @"14", @"16", @"18",
+		                @"20", @"22", @"24", @"26",
+		                @"28", @"36", @"48", @"72", nil];
+		_fontSize = 12;
+		_fontName = @"Helvetica";
 	}
 	return self;
 }
@@ -32,42 +42,124 @@
 	self.title = @"TextEditor";
 
 	UIBarButtonItem *settingButton = [[UIBarButtonItem alloc]
-	                                  initWithTitle:@"设置"
+	                                  initWithTitle:@"字体"
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
-	                                         action:@selector(buttonClicked_setting:)];
+	                                         action:@selector(buttonClicked_Font:)];
 
 	self.navigationItem.rightBarButtonItem = settingButton;
-    
-    UIBarButtonItem *colorButton = [[UIBarButtonItem alloc]
-                                    initWithTitle:@"颜色" style:UIBarButtonItemStylePlain
-                                    target:self action:@selector(buttonClicked_color:)];
-    self.navigationItem.leftBarButtonItem = colorButton;
-
-	self.textView = [[UITextView alloc] initWithFrame:self.view.frame];
-	[self.view addSubview:self.textView];
-	[self addDismissButtontoKeyBoard];
-
 	[settingButton release];
+
+	self.textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
+	self.textView.delegate = self;
+	[self.view addSubview:self.textView];
+
+	NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
+	UISegmentedControl *segmented = [[UISegmentedControl alloc]initWithItems:array];
+	segmented.segmentedControlStyle = UISegmentedControlSegmentCenter;
+	[segmented addTarget:self
+	              action:@selector(buttonClicked_Segment:)
+	    forControlEvents:UIControlEventValueChanged];
+	segmented.selectedSegmentIndex = 0;
+	self.navigationItem.titleView = segmented;
+    [segmented release];
+
+	UIBarButtonItem *fontSizeButton = [[UIBarButtonItem alloc]
+	                                   initWithTitle:@"字体大小"
+	                                           style:UIBarButtonItemStylePlain
+	                                          target:self
+	                                          action:@selector(buttonClicked_FontSize:)];
+	self.navigationItem.leftBarButtonItem = fontSizeButton;
+	[fontSizeButton release];
+
+	_fontPicker = [[UIPickerView alloc] init];
+	_fontPicker.showsSelectionIndicator = YES;
+	_fontPicker.delegate = self;
+	_fontPicker.dataSource = self;
+    _fontPicker.hidden = YES;
+	[_fontPicker selectRow:4 inComponent:0 animated:YES];
+	[self.textView addSubview:_fontPicker];
+	[self addDismissButtontoKeyBoard];
+}
+
+- (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
+    CGRect tScreen = [UIScreen mainScreen].bounds;
+    CGFloat tFontPickerHeight = 216;
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+    {
+        CGFloat exchange = tScreen.size.height;
+        tScreen.size.height = tScreen.size.width;
+        tScreen.size.width = exchange;
+    }
+    
+    _fontPicker.frame = CGRectMake(0, tScreen.size.height -tFontPickerHeight, tScreen.size.width, tFontPickerHeight);
+    
+    self.textView.frame = tScreen;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+    
+	UIInterfaceOrientation tToInterfaceO = [UIApplication sharedApplication].statusBarOrientation;
+	[self updateCurInterface:tToInterfaceO];
 }
 
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
 }
-- (void)buttonClicked_setting:(id)sender {
-	KDTableViewController *tTableVC = [[KDTableViewController alloc] initWithOption:KDTableOptionGeneral];
-	tTableVC.vcdelegete = self;
+
+- (void)buttonClicked_Font:(id)sender {
+	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
+	tTableVC.fontNameDelegate = self;
+
+	tTableVC.fontName = _fontName;
     
-	tTableVC.allOptions = _allOptions;
-	[self.navigationController pushViewController:tTableVC animated:YES];
-	[tTableVC release];
+    tTableVC.modalViewdelegate = self;
+    
+    KDTextEditorNavigationController *navController = [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
+    [tTableVC release];
+    
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:navController animated:YES completion:nil];
+	//[self.navigationController pushViewController:tTableVC animated:YES];
+    [navController release];
 }
 
-- (void)buttonClicked_color:(id)sender{
-    KDColorPickViewController *tColorPickVC = [[KDColorPickViewController alloc] init];
-    [self.navigationController pushViewController:tColorPickVC animated:YES];
-    [tColorPickVC release];
+- (void)buttonClicked_Segment:(id)sender {
+	switch ([sender selectedSegmentIndex]) {
+		case 0:
+		{
+			self.textView.textAlignment = NSTextAlignmentLeft;
+			[self.textView resignFirstResponder];
+			[self.textView becomeFirstResponder];
+		}
+		break;
+
+		case 1:
+		{
+			self.textView.textAlignment = NSTextAlignmentCenter;
+			[self.textView resignFirstResponder];
+			[self.textView becomeFirstResponder];
+		}
+		break;
+
+		case 2:
+		{
+			self.textView.textAlignment = NSTextAlignmentRight;
+			[self.textView resignFirstResponder];
+			[self.textView becomeFirstResponder];
+		}
+		break;
+
+		default:
+			break;
+	}
+}
+
+- (void)buttonClicked_FontSize:(id)sender {
+	[self.textView resignFirstResponder];
+    _fontPicker.hidden = NO;
 }
 
 - (void)addDismissButtontoKeyBoard {
@@ -87,40 +179,65 @@
 	[topView release];
 }
 
+- (void)dismissPicker:(id)sender {
+}
+
 - (void)dismissKeyBoard {
 	[self.textView resignFirstResponder];
 }
 
+#pragma mark - KDTextEditorViewControllerDelegate
+- (void)changeTextFont:(NSString *)font {
+	_fontName = font;
+	self.textView.font = [UIFont fontWithName:font size:_fontSize];
+}
 
+#pragma mark - TextView Delegate
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+    _fontPicker.hidden = YES;
+	return YES;
+}
 
-- (void)changeTextFont:(NSMutableDictionary *)dict {
-	//NSLog(@"protocol");
-	NSString *tFont = [dict objectForKey:@"字体"];
-	CGFloat tSize = [[dict objectForKey:@"大小"] floatValue];
-	NSString *tAlignment = [dict objectForKey:@"对齐方式"];
-	if (!tFont) {
-		tFont = @"Helvetica";
-		[dict setObject:@"Helvetica" forKey:@"字体"];
-	}
-	if (tSize == 0) {
-		tSize = 12.0;
-		[dict setObject:@"12" forKey:@"大小"];
-	}
-	if (!tAlignment) {
-		tAlignment = @"左对齐";
-		[dict setObject:@"左对齐" forKey:@"对齐方式"];
-	}
-	self.textView.font = [UIFont fontWithName:tFont size:tSize];
-	if ([tAlignment isEqualToString:@"左对齐"]) {
-		self.textView.textAlignment = NSTextAlignmentLeft;
-	}
-	if ([tAlignment isEqualToString:@"居中"]) {
-		self.textView.textAlignment = NSTextAlignmentCenter;
-	}
-	if ([tAlignment isEqualToString:@"右对齐"]) {
-		self.textView.textAlignment = NSTextAlignmentRight;
-	}
-	_allOptions = dict;
+#pragma mark - rotate
+
+- (BOOL)shouldAutorotate {
+	return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+	return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                         duration:(NSTimeInterval)duration {
+	[self updateCurInterface:toInterfaceOrientation];
+}
+
+#pragma mark - Picker DataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+	return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+	return [_pickerArray count];
+}
+
+#pragma mark - Picker Delegate
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+	return [_pickerArray objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+	_fontSize = [[_pickerArray objectAtIndex:row] floatValue];
+	self.textView.font = [UIFont fontWithName:_fontName size:_fontSize];
+}
+
+#pragma mark - Modal View Delegate
+- (void)didDismissModalView
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dealloc {

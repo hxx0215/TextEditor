@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[KDTableViewController dealloc]:KDTableViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_settingList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[KDTableViewController buttonClicked_edit:]:KDTableViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.navigationItem">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[KDTextEditorViewController buttonClicked_Segment:]:KDTextEditorViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.textView.endOfDocument">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

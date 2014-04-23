@@ -10,10 +10,14 @@
 
 @protocol KDTextEditorViewControllerDelegate <NSObject>
 
-- (void)changeTextFont:(NSMutableDictionary *)dict;
+@optional
+- (void)changeTextFont:(NSString *)font;
 
 @end
 
-@protocol KDTableViewControllerDelegate <NSObject>
-- (void)optionSetForKey:(NSString *)key value:(NSString *)value;
+@protocol ModalViewControllerDelegate <NSObject>
+
+@optional
+- (void)didDismissModalView;
 @end
+

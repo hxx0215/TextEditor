@@ -8,7 +8,7 @@
 
 #import "KDAppDelegate.h"
 #import "KDTextEditorViewController.h"
-
+#import "KDTextEditorNavigationController.h"
 
 @implementation KDAppDelegate
 
@@ -16,11 +16,11 @@
 @synthesize navController = _navController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds] ] autorelease];
 	// Override point for customization after application launch.
 	self.window.backgroundColor = [UIColor whiteColor];
-	self.viewController = [[KDTextEditorViewController alloc] init];
-	self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+	self.viewController = [[[KDTextEditorViewController alloc] init] autorelease];
+	self.navController = [[[KDTextEditorNavigationController alloc] initWithRootViewController:self.viewController] autorelease];
 
 	self.window.rootViewController = self.navController;
 	[self.window makeKeyAndVisible];

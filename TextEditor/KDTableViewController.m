@@ -22,6 +22,7 @@
 @implementation KDTableViewController
 
 @synthesize fontName = _fontName;
+@synthesize textEditorVCtrlDelegate = _textEditorVCtrlDelegate;
 
 - (id)init {
 	self = [super init];

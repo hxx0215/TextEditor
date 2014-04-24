@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  TextEditor
+
+  Created by hxx on 14-4-23.
+  Copyright (c) 2014年 hxx. All rights reserved.
+*/
+"Fonts" = "字体";
+"TextEditor" = "编辑器";
+"Edit" = "编辑";
+"Cancel" = "取消";
+"Done" = "完成";
+"Reset" = "重置";
+"DoneKeyboard" = "收起键盘";
+"Alert" = "警告";
+"AlertMessage" = "你无法删除已选字体";
+"OK" = "好";

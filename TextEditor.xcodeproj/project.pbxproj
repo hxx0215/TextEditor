@@ -21,6 +21,12 @@
 		B9A9A2AB19036B4E005A9499 /* TextEditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A9A2AA19036B4E005A9499 /* TextEditorTests.m */; };
 		B9A9A2B619036E11005A9499 /* KDTextEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A9A2B519036E11005A9499 /* KDTextEditorViewController.m */; };
 		B9AED4EE1907931600F49FCB /* KDTextEditorNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AED4ED1907931600F49FCB /* KDTextEditorNavigationController.m */; };
+		B9B50B88190804D00059E044 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B8A190804D00059E044 /* Localizable.strings */; };
+		B9B50B981908A5C70059E044 /* paragraph-left.png in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B971908A5C70059E044 /* paragraph-left.png */; };
+		B9B50B9B1908A7030059E044 /* paragraph-center.png in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B991908A7030059E044 /* paragraph-center.png */; };
+		B9B50B9C1908A7030059E044 /* paragraph-right.png in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B9A1908A7030059E044 /* paragraph-right.png */; };
+		B9B50B9E1908A89B0059E044 /* font.png in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B9D1908A89B0059E044 /* font.png */; };
+		B9B50BA01908ADCD0059E044 /* fontsize.png in Resources */ = {isa = PBXBuildFile; fileRef = B9B50B9F1908ADCD0059E044 /* fontsize.png */; };
 		B9C01E391904A95200AB11EC /* KDTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C01E381904A95200AB11EC /* KDTableViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +63,13 @@
 		B9A9A2B519036E11005A9499 /* KDTextEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KDTextEditorViewController.m; sourceTree = "<group>"; };
 		B9AED4EC1907931600F49FCB /* KDTextEditorNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDTextEditorNavigationController.h; sourceTree = "<group>"; };
 		B9AED4ED1907931600F49FCB /* KDTextEditorNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KDTextEditorNavigationController.m; sourceTree = "<group>"; };
+		B9B50B89190804D00059E044 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B9B50B8B190804D50059E044 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B9B50B971908A5C70059E044 /* paragraph-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paragraph-left.png"; sourceTree = "<group>"; };
+		B9B50B991908A7030059E044 /* paragraph-center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paragraph-center.png"; sourceTree = "<group>"; };
+		B9B50B9A1908A7030059E044 /* paragraph-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paragraph-right.png"; sourceTree = "<group>"; };
+		B9B50B9D1908A89B0059E044 /* font.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font.png; sourceTree = "<group>"; };
+		B9B50B9F1908ADCD0059E044 /* fontsize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fontsize.png; sourceTree = "<group>"; };
 		B9C01E371904A95200AB11EC /* KDTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KDTableViewController.h; sourceTree = "<group>"; };
 		B9C01E381904A95200AB11EC /* KDTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KDTableViewController.m; sourceTree = "<group>"; };
 		B9C01E3A1904D94900AB11EC /* KDTextEditorDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KDTextEditorDelegate.h; sourceTree = "<group>"; };
@@ -119,6 +132,7 @@
 		B9A9A28B19036B4E005A9499 /* TextEditor */ = {
 			isa = PBXGroup;
 			children = (
+				B9B50B8E19089AD50059E044 /* Resources */,
 				B9A9A29419036B4E005A9499 /* KDAppDelegate.h */,
 				B9A9A29519036B4E005A9499 /* KDAppDelegate.m */,
 				B9AED4EC1907931600F49FCB /* KDTextEditorNavigationController.h */,
@@ -161,6 +175,19 @@
 				B9A9A2A719036B4E005A9499 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B9B50B8E19089AD50059E044 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B9B50B9F1908ADCD0059E044 /* fontsize.png */,
+				B9B50B9D1908A89B0059E044 /* font.png */,
+				B9B50B991908A7030059E044 /* paragraph-center.png */,
+				B9B50B9A1908A7030059E044 /* paragraph-right.png */,
+				B9B50B971908A5C70059E044 /* paragraph-left.png */,
+				B9B50B8A190804D00059E044 /* Localizable.strings */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,7 +268,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9A9A29019036B4E005A9499 /* InfoPlist.strings in Resources */,
+				B9B50BA01908ADCD0059E044 /* fontsize.png in Resources */,
+				B9B50B9C1908A7030059E044 /* paragraph-right.png in Resources */,
+				B9B50B981908A5C70059E044 /* paragraph-left.png in Resources */,
+				B9B50B9B1908A7030059E044 /* paragraph-center.png in Resources */,
+				B9B50B88190804D00059E044 /* Localizable.strings in Resources */,
 				B9A9A29819036B4E005A9499 /* Images.xcassets in Resources */,
+				B9B50B9E1908A89B0059E044 /* font.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +336,15 @@
 				B9773CF91907490800EFF89B /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B9B50B8A190804D00059E044 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9B50B89190804D00059E044 /* en */,
+				B9B50B8B190804D50059E044 /* zh-Hans */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

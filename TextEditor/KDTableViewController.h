@@ -15,10 +15,9 @@
 
 @interface KDTableViewController : UITableViewController 
 
-
 @property (nonatomic, retain) NSString *fontName;
-@property (nonatomic, assign) id<KDTextEditorViewControllerDelegate> fontNameDelegate;
-@property (nonatomic, assign) id<ModalViewControllerDelegate> modalViewdelegate;
+@property (nonatomic, assign) id<KDTextEditorViewControllerDelegate> textEditorVCtrlDelegate;
+
 
 
 

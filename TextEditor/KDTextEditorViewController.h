@@ -12,7 +12,6 @@
 @class KDTableViewController;
 
 @interface KDTextEditorViewController : UIViewController <KDTextEditorViewControllerDelegate,
-	                                                      ModalViewControllerDelegate,
 	                                                      UIPickerViewDelegate,
 	                                                      UIPickerViewDataSource,
 	                                                      UITextViewDelegate>

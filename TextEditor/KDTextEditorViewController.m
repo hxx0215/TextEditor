@@ -16,7 +16,7 @@
 	NSArray *_pickerArray;
 	CGFloat _fontSize;
 	NSString *_fontName;
-	CGFloat _pickerOriginY;
+	CGFloat _originY;
 	CGFloat _pickerY;
 }
 @end
@@ -54,10 +54,10 @@
 
 	[settingButton release];
 
-	self.textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
-	self.textView.delegate = self;
-	[self.view addSubview:self.textView];
-	_pickerOriginY = INFINITY;
+	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
+	_textView.delegate = self;
+	[self.view addSubview:_textView];
+	_originY = INFINITY;
 
 	//NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
 	UISegmentedControl *segmented = [[UISegmentedControl alloc]initWithItems:nil];
@@ -94,8 +94,10 @@
 	_fontPicker.delegate = self;
 	_fontPicker.dataSource = self;
 	_fontPicker.hidden = YES;
+    _fontPicker.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+    
 	[_fontPicker selectRow:4 inComponent:0 animated:YES];
-	[self.textView addSubview:_fontPicker];
+	[_textView addSubview:_fontPicker];
 	if ([self isiPhone]) {
 		[self addDismissButtontoKeyBoard];
 	}
@@ -110,11 +112,11 @@
 	}
 	CGFloat tFontPickerHeight = 216;
 	_pickerY = tScreen.size.height - tFontPickerHeight;
-	CGFloat tPickerY = _pickerY + (self.textView.contentOffset.y - _pickerOriginY) >
-	    100 ? _pickerY + (self.textView.contentOffset.y - _pickerOriginY) : _pickerY;
+	CGFloat tPickerY = _pickerY + (_textView.contentOffset.y - _originY) >
+	    100 ? _pickerY + (_textView.contentOffset.y - _originY) : _pickerY;
 	_fontPicker.frame = CGRectMake(0, tPickerY, tScreen.size.width, tFontPickerHeight);
 
-    self.textView.frame = tScreen;
+    _textView.frame = tScreen;
     
 }
 
@@ -132,11 +134,11 @@
 
 - (void)buttonClicked_Font:(id)sender {
 	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
-	tTableVC.fontNameDelegate = self;
+	tTableVC.textEditorVCtrlDelegate = self;
 
 	tTableVC.fontName = _fontName;
 
-	tTableVC.modalViewdelegate = self;
+
 
 	KDTextEditorNavigationController *navController =
 	    [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
@@ -152,25 +154,25 @@
 	switch ([sender selectedSegmentIndex]) {
 		case 0:
 		{
-			self.textView.textAlignment = NSTextAlignmentLeft;
-			[self.textView resignFirstResponder];
-			[self.textView becomeFirstResponder];
+			_textView.textAlignment = NSTextAlignmentLeft;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
 		}
 		break;
 
 		case 1:
 		{
-			self.textView.textAlignment = NSTextAlignmentCenter;
-			[self.textView resignFirstResponder];
-			[self.textView becomeFirstResponder];
+			_textView.textAlignment = NSTextAlignmentCenter;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
 		}
 		break;
 
 		case 2:
 		{
-			self.textView.textAlignment = NSTextAlignmentRight;
-			[self.textView resignFirstResponder];
-			[self.textView becomeFirstResponder];
+			_textView.textAlignment = NSTextAlignmentRight;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
 		}
 		break;
 
@@ -180,12 +182,12 @@
 }
 
 - (void)buttonClicked_FontSize:(id)sender {
-	[self.textView resignFirstResponder];
-	_fontPicker.hidden = NO;
+	[_textView resignFirstResponder];
+	_fontPicker.hidden = !_fontPicker.hidden;
 }
 
 - (void)addDismissButtontoKeyBoard {
-	UIToolbar *tTopView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 30)];
+	UIToolbar *tTopView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
 	[tTopView setBarStyle:UIBarStyleBlack];
 
 	UIBarButtonItem *tSpaceButton =
@@ -204,20 +206,25 @@
 	[tSpaceButton release];
 
 	[tTopView setItems:buttonsArray];
-	[self.textView setInputAccessoryView:tTopView];
+	[_textView setInputAccessoryView:tTopView];
 	[tTopView release];
 }
 
 
 - (void)dismissKeyBoard {
-	[self.textView resignFirstResponder];
+	[_textView resignFirstResponder];
 }
 
 #pragma mark - KDTextEditorViewControllerDelegate
-- (void)changeTextFont:(NSString *)font {
-	_fontName = font;
-	self.textView.font = [UIFont fontWithName:font size:_fontSize];
+- (void)textEditorViewControllerDidDismissModalView:(NSString *)font {
+    if (font)
+    {
+        _fontName = font;
+        _textView.font = [UIFont fontWithName:font size:_fontSize];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 #pragma mark - TextView Delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
@@ -226,10 +233,10 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (INFINITY == _pickerOriginY)
-		_pickerOriginY = self.textView.contentOffset.y;
+	if (INFINITY == _originY)
+		_originY = _textView.contentOffset.y;
 	CGRect tFrame = _fontPicker.frame;
-	tFrame.origin.y = _pickerY + (self.textView.contentOffset.y - _pickerOriginY);
+	tFrame.origin.y = _pickerY + (_textView.contentOffset.y - _originY);
 	_fontPicker.frame = tFrame;
 }
 
@@ -254,7 +261,7 @@
 	return 1;
 }
 
-- (NSInteger)    pickerView:(UIPickerView *)pickerView
+- (NSInteger)pickerView:(UIPickerView *)pickerView
     numberOfRowsInComponent:(NSInteger)component {
 	return [_pickerArray count];
 }
@@ -271,13 +278,10 @@
       didSelectRow:(NSInteger)row
        inComponent:(NSInteger)component {
 	_fontSize = [[_pickerArray objectAtIndex:row] floatValue];
-	self.textView.font = [UIFont fontWithName:_fontName size:_fontSize];
+	_textView.font = [UIFont fontWithName:_fontName size:_fontSize];
 }
 
-#pragma mark - Modal View Delegate
-- (void)didDismissModalView {
-	[self dismissViewControllerAnimated:YES completion:nil];
-}
+
 
 #pragma mark - other method
 

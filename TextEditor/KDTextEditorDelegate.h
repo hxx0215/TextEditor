@@ -8,16 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
+@class KDTextEditorViewController;
+
 @protocol KDTextEditorViewControllerDelegate <NSObject>
 
 @optional
-- (void)changeTextFont:(NSString *)font;
+
+- (void)textEditorViewControllerDidDismissModalView:(NSString *)font;
+
 
 @end
 
-@protocol ModalViewControllerDelegate <NSObject>
+/*@protocol ModalViewControllerDelegate <NSObject>
 
 @optional
-- (void)didDismissModalView;
-@end
+
+- (void)textEditorViewControllerDidDismissModalView;
+
+@end*/
 

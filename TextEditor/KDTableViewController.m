@@ -23,6 +23,7 @@
 
 @synthesize fontName = _fontName;
 @synthesize textEditorVCtrlDelegate = _textEditorVCtrlDelegate;
+@synthesize tableView = _tableView;
 
 - (id)init {
 	self = [super init];
@@ -35,6 +36,10 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+    _tableView = [[UITableView alloc] init];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    [self.view addSubview:_tableView];
     
     NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
     [tDefaults synchronize];
@@ -67,7 +72,10 @@
 
 	_editStatus = YES;
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+    _tableView.frame = self.view.frame;
+}
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
@@ -163,7 +171,7 @@
 	UITableViewCell *tCell = [tableView cellForRowAtIndexPath:indexPath];
 	tCell.accessoryType = UITableViewCellAccessoryCheckmark;
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
     if (self.textEditorVCtrlDelegate  && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)]) {
         [self.textEditorVCtrlDelegate
          textEditorViewControllerDidDismissModalView:[_fontList objectAtIndex:[indexPath row]]];

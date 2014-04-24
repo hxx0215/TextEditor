@@ -13,11 +13,11 @@
 
 @class KDFontSizeViewController;
 
-@interface KDTableViewController : UITableViewController 
+@interface KDTableViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, retain) NSString *fontName;
 @property (nonatomic, assign) id<KDTextEditorViewControllerDelegate> textEditorVCtrlDelegate;
-
+@property (nonatomic, strong) UITableView *tableView;
 
 
 

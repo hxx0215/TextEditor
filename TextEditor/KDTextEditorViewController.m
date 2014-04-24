@@ -49,9 +49,7 @@
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
 	                                         action:@selector(buttonClicked_Font)];
-
 	self.navigationItem.rightBarButtonItem = fontButton;
-
 	[fontButton release];
 
 	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
@@ -132,60 +130,6 @@
 	// Dispose of any resources that can be recreated.
 }
 
-- (void)buttonClicked_Font {
-	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
-	tTableVC.textEditorVCtrlDelegate = self;
-
-	tTableVC.fontName = _fontName;
-
-
-
-	KDTextEditorNavigationController *navController =
-	    [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
-	[tTableVC release];
-
-	navController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentViewController:navController animated:YES completion:nil];
-	//[self.navigationController pushViewController:tTableVC animated:YES];
-	[navController release];
-}
-
-- (void)buttonClicked_Segment:(id)sender {
-    if (!sender) return ;
-	switch ([sender selectedSegmentIndex]) {
-		case 0:
-		{
-			_textView.textAlignment = NSTextAlignmentLeft;
-			[_textView resignFirstResponder];
-			[_textView becomeFirstResponder];
-		}
-		break;
-
-		case 1:
-		{
-			_textView.textAlignment = NSTextAlignmentCenter;
-			[_textView resignFirstResponder];
-			[_textView becomeFirstResponder];
-		}
-		break;
-
-		case 2:
-		{
-			_textView.textAlignment = NSTextAlignmentRight;
-			[_textView resignFirstResponder];
-			[_textView becomeFirstResponder];
-		}
-		break;
-
-		default:
-			break;
-	}
-}
-
-- (void)buttonClicked_FontSize {
-	[_textView resignFirstResponder];
-	_fontPicker.hidden = !_fontPicker.hidden;
-}
 
 - (void)addDismissButtontoKeyBoard {
 	UIToolbar *tTopView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
@@ -216,6 +160,62 @@
 	[_textView resignFirstResponder];
 }
 
+#pragma mark - ButtonClicked
+- (void)buttonClicked_Font {
+	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
+	tTableVC.textEditorVCtrlDelegate = self;
+    
+	tTableVC.fontName = _fontName;
+    
+    
+    
+	KDTextEditorNavigationController *navController =
+    [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
+	[tTableVC release];
+    
+	navController.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentViewController:navController animated:YES completion:nil];
+	//[self.navigationController pushViewController:tTableVC animated:YES];
+	[navController release];
+}
+
+- (void)buttonClicked_Segment:(id)sender {
+    if (!sender) return ;
+	switch ([sender selectedSegmentIndex]) {
+		case 0:
+		{
+			_textView.textAlignment = NSTextAlignmentLeft;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
+		}
+            break;
+            
+		case 1:
+		{
+			_textView.textAlignment = NSTextAlignmentCenter;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
+		}
+            break;
+            
+		case 2:
+		{
+			_textView.textAlignment = NSTextAlignmentRight;
+			[_textView resignFirstResponder];
+			[_textView becomeFirstResponder];
+		}
+            break;
+            
+		default:
+			break;
+	}
+}
+
+- (void)buttonClicked_FontSize {
+	[_textView resignFirstResponder];
+	_fontPicker.hidden = !_fontPicker.hidden;
+}
+
 #pragma mark - KDTextEditorViewControllerDelegate
 - (void)textEditorViewControllerDidDismissModalView:(NSString *)font {
     if (font)
@@ -233,6 +233,7 @@
 	return YES;
 }
 
+#pragma mark - ScrollView Delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	if (INFINITY == _originY)
 		_originY = _textView.contentOffset.y;

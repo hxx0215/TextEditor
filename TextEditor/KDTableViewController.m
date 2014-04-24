@@ -55,12 +55,12 @@
 	               initWithTitle:NSLocalizedString(@"Edit", nil)
 	                       style:UIBarButtonItemStylePlain
 	                      target:self
-	                      action:@selector(buttonClicked_Edit:)];
+	                      action:@selector(buttonClicked_Edit)];
 	_cancelButton = [[UIBarButtonItem alloc]
 	                 initWithTitle:NSLocalizedString(@"Cancel", nil)
 	                         style:UIBarButtonItemStylePlain
 	                        target:self
-	                        action:@selector(buttonClicked_Cancel:)];
+	                        action:@selector(buttonClicked_Cancel)];
 
 	self.navigationItem.rightBarButtonItem = _editButton;
 	self.navigationItem.leftBarButtonItem = _cancelButton;
@@ -75,14 +75,14 @@
 
 #pragma mark - ButtonClicked
 
-- (void)buttonClicked_Edit:(id)sender {
+- (void)buttonClicked_Edit{
 	if (_editStatus) {
 		_editButton.title = NSLocalizedString(@"Done", nil);
 		_resetFontButton = [[UIBarButtonItem alloc]
 		                    initWithTitle:NSLocalizedString(@"Reset", nil)
 		                            style:UIBarButtonItemStylePlain
 		                           target:self
-		                           action:@selector(buttonClicked_Reset:)];
+		                           action:@selector(buttonClicked_Reset)];
 		self.navigationItem.leftBarButtonItem = _resetFontButton;
 	}
 	else {
@@ -93,7 +93,7 @@
 	_editStatus = !_editStatus;
 }
 
-- (void)buttonClicked_Reset:(id)sender {
+- (void)buttonClicked_Reset {
 	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
 	NSMutableArray *tFontSet = [[NSMutableArray alloc] initWithArray:[UIFont familyNames]];
 	[tDefaults setObject:tFontSet forKey:@"kTextEditorFontSet"];
@@ -106,7 +106,7 @@
 	[self.tableView reloadData];
 }
 
-- (void)buttonClicked_Cancel:(id)sender {
+- (void)buttonClicked_Cancel{
     if (self.textEditorVCtrlDelegate && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)])
     {
         [self.textEditorVCtrlDelegate textEditorViewControllerDidDismissModalView:nil];

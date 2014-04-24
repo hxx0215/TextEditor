@@ -19,11 +19,5 @@
 
 @end
 
-/*@protocol ModalViewControllerDelegate <NSObject>
 
-@optional
-
-- (void)textEditorViewControllerDidDismissModalView;
-
-@end*/
 

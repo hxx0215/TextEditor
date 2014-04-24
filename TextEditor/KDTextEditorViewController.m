@@ -44,15 +44,15 @@
 	CGSize tImgSize = CGSizeMake(20, 20);
 	//self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:1  blue:1 alpha:1.0f];
 	UIImage *tFonts = [self imageScale:[UIImage imageNamed:@"font"] toSize:tImgSize];
-	UIBarButtonItem *settingButton = [[UIBarButtonItem alloc]
+	UIBarButtonItem *fontButton = [[UIBarButtonItem alloc]
 	                                  initWithImage:tFonts
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
-	                                         action:@selector(buttonClicked_Font:)];
+	                                         action:@selector(buttonClicked_Font)];
 
-	self.navigationItem.rightBarButtonItem = settingButton;
+	self.navigationItem.rightBarButtonItem = fontButton;
 
-	[settingButton release];
+	[fontButton release];
 
 	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
 	_textView.delegate = self;
@@ -61,11 +61,11 @@
 
 	//NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
 	UISegmentedControl *segmented = [[UISegmentedControl alloc]initWithItems:nil];
-	UIImage *tAlignLeft = [self imageScale:[UIImage imageNamed:@"paragraph-left"]
+	UIImage *tAlignLeft = [self imageScale:[UIImage imageNamed:@"paragraph-left.png"]
 	                                toSize:tImgSize];
-	UIImage *tAlignCenter = [self imageScale:[UIImage imageNamed:@"paragraph-center"]
+	UIImage *tAlignCenter = [self imageScale:[UIImage imageNamed:@"paragraph-center.png"]
 	                                  toSize:tImgSize];
-	UIImage *tAlignRight = [self imageScale:[UIImage imageNamed:@"paragraph-right"]
+	UIImage *tAlignRight = [self imageScale:[UIImage imageNamed:@"paragraph-right.png"]
 	                                 toSize:tImgSize];
 	[segmented insertSegmentWithImage:tAlignLeft atIndex:0 animated:YES];
 	[segmented insertSegmentWithImage:tAlignCenter atIndex:1 animated:YES];
@@ -85,7 +85,7 @@
 	                                   initWithImage:tFontSize
 	                                           style:UIBarButtonItemStylePlain
 	                                          target:self
-	                                          action:@selector(buttonClicked_FontSize:)];
+	                                          action:@selector(buttonClicked_FontSize)];
 	self.navigationItem.leftBarButtonItem = fontSizeButton;
 	[fontSizeButton release];
 
@@ -132,7 +132,7 @@
 	// Dispose of any resources that can be recreated.
 }
 
-- (void)buttonClicked_Font:(id)sender {
+- (void)buttonClicked_Font {
 	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
 	tTableVC.textEditorVCtrlDelegate = self;
 
@@ -151,6 +151,7 @@
 }
 
 - (void)buttonClicked_Segment:(id)sender {
+    if (!sender) return ;
 	switch ([sender selectedSegmentIndex]) {
 		case 0:
 		{
@@ -181,7 +182,7 @@
 	}
 }
 
-- (void)buttonClicked_FontSize:(id)sender {
+- (void)buttonClicked_FontSize {
 	[_textView resignFirstResponder];
 	_fontPicker.hidden = !_fontPicker.hidden;
 }

@@ -13,10 +13,10 @@
 @interface KDTextEditorViewController ()
 {
 	UIPickerView *_fontPicker;
-	NSArray *_pickerArray;
+	NSArray *_fontSizeList;
+    NSString *_fontName;
 	CGFloat _fontSize;
-	NSString *_fontName;
-	CGFloat _originY;
+	CGFloat _textViewContentOffsetY;
 	CGFloat _pickerY;
 }
 @end
@@ -27,7 +27,7 @@
 - (id)init {
 	self = [super init];
 	if (self) {
-		_pickerArray = [[NSArray alloc]initWithObjects:@"8", @"9", @"10", @"11",
+		_fontSizeList = [[NSArray alloc]initWithObjects:@"8", @"9", @"10", @"11",
 		                @"12", @"14", @"16", @"18",
 		                @"20", @"22", @"24", @"26",
 		                @"28", @"36", @"48", @"72", nil];
@@ -42,50 +42,49 @@
 	// Do any additional setup after loading the view.
 	self.title = @"TextEditor";
 	CGSize tImgSize = CGSizeMake(20, 20);
-	//self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:1 green:1  blue:1 alpha:1.0f];
 	UIImage *tFonts = [self imageScale:[UIImage imageNamed:@"font"] toSize:tImgSize];
-	UIBarButtonItem *fontButton = [[UIBarButtonItem alloc]
+	UIBarButtonItem *tBtnFont = [[UIBarButtonItem alloc]
 	                                  initWithImage:tFonts
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
 	                                         action:@selector(buttonClicked_Font)];
-	self.navigationItem.rightBarButtonItem = fontButton;
-	[fontButton release];
+	self.navigationItem.rightBarButtonItem = tBtnFont;
+	[tBtnFont release];
 
 	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
 	_textView.delegate = self;
 	[self.view addSubview:_textView];
-	_originY = INFINITY;
+	_textViewContentOffsetY = INFINITY;
 
 	//NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
-	UISegmentedControl *segmented = [[UISegmentedControl alloc]initWithItems:nil];
+	UISegmentedControl *tSegment = [[UISegmentedControl alloc]initWithItems:nil];
 	UIImage *tAlignLeft = [self imageScale:[UIImage imageNamed:@"paragraph-left.png"]
 	                                toSize:tImgSize];
 	UIImage *tAlignCenter = [self imageScale:[UIImage imageNamed:@"paragraph-center.png"]
 	                                  toSize:tImgSize];
 	UIImage *tAlignRight = [self imageScale:[UIImage imageNamed:@"paragraph-right.png"]
 	                                 toSize:tImgSize];
-	[segmented insertSegmentWithImage:tAlignLeft atIndex:0 animated:YES];
-	[segmented insertSegmentWithImage:tAlignCenter atIndex:1 animated:YES];
-	[segmented insertSegmentWithImage:tAlignRight atIndex:2 animated:YES];
-	segmented.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmented.frame = CGRectMake(0, 0, 60, 30);
-	[segmented addTarget:self
+	[tSegment insertSegmentWithImage:tAlignLeft atIndex:0 animated:YES];
+	[tSegment insertSegmentWithImage:tAlignCenter atIndex:1 animated:YES];
+	[tSegment insertSegmentWithImage:tAlignRight atIndex:2 animated:YES];
+	tSegment.segmentedControlStyle = UISegmentedControlStyleBar;
+	tSegment.frame = CGRectMake(0, 0, 60, 30);
+	[tSegment addTarget:self
 	              action:@selector(buttonClicked_Segment:)
 	    forControlEvents:UIControlEventValueChanged];
-	segmented.selectedSegmentIndex = 0;
-	self.navigationItem.titleView = segmented;
-	[segmented release];
+	tSegment.selectedSegmentIndex = 0;
+	self.navigationItem.titleView = tSegment;
+	[tSegment release];
 
 	UIImage *tFontSize = [self imageScale:[UIImage imageNamed:@"fontsize"]
 	                               toSize:tImgSize];
-	UIBarButtonItem *fontSizeButton = [[UIBarButtonItem alloc]
+	UIBarButtonItem *tBtnFontSize = [[UIBarButtonItem alloc]
 	                                   initWithImage:tFontSize
 	                                           style:UIBarButtonItemStylePlain
 	                                          target:self
 	                                          action:@selector(buttonClicked_FontSize)];
-	self.navigationItem.leftBarButtonItem = fontSizeButton;
-	[fontSizeButton release];
+	self.navigationItem.leftBarButtonItem = tBtnFontSize;
+	[tBtnFontSize release];
 
 	_fontPicker = [[UIPickerView alloc] init];
 	_fontPicker.showsSelectionIndicator = YES;
@@ -104,14 +103,14 @@
 - (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
 	CGRect tScreen = [UIScreen mainScreen].bounds;
 	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-		CGFloat exchange = tScreen.size.height;
+		CGFloat tExchange = tScreen.size.height;
 		tScreen.size.height = tScreen.size.width;
-		tScreen.size.width = exchange;
+		tScreen.size.width = tExchange;
 	}
 	CGFloat tFontPickerHeight = 216;
 	_pickerY = tScreen.size.height - tFontPickerHeight;
-	CGFloat tPickerY = _pickerY + (_textView.contentOffset.y - _originY) >
-	    100 ? _pickerY + (_textView.contentOffset.y - _originY) : _pickerY;
+	CGFloat tPickerY = _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY) >
+	    100 ? _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY) : _pickerY;
 	_fontPicker.frame = CGRectMake(0, tPickerY, tScreen.size.width, tFontPickerHeight);
 
     _textView.frame = tScreen;
@@ -135,20 +134,20 @@
 	UIToolbar *tTopView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
 	[tTopView setBarStyle:UIBarStyleBlack];
 
-	UIBarButtonItem *tSpaceButton =
+	UIBarButtonItem *tBtnSpace =
 	    [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
 	                                                 target:self
 	                                                 action:nil];
 
-	UIBarButtonItem *tDoneButton = [[UIBarButtonItem alloc]
+	UIBarButtonItem *tBtnDone = [[UIBarButtonItem alloc]
 	                               initWithTitle:NSLocalizedString(@"DoneKeyboard", nil)
 	                                       style:UIBarButtonItemStyleDone
 	                                      target:self
 	                                      action:@selector(dismissKeyBoard)];
 
-	NSArray *buttonsArray = [NSArray arrayWithObjects:tSpaceButton, tDoneButton, nil];
-	[tDoneButton release];
-	[tSpaceButton release];
+	NSArray *buttonsArray = [NSArray arrayWithObjects:tBtnSpace, tBtnDone, nil];
+	[tBtnDone release];
+	[tBtnSpace release];
 
 	[tTopView setItems:buttonsArray];
 	[_textView setInputAccessoryView:tTopView];
@@ -169,14 +168,14 @@
     
     
     
-	KDTextEditorNavigationController *navController =
+	KDTextEditorNavigationController *tNavController =
     [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
 	[tTableVC release];
     
-	navController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentViewController:navController animated:YES completion:nil];
+	tNavController.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentViewController:tNavController animated:YES completion:nil];
 	//[self.navigationController pushViewController:tTableVC animated:YES];
-	[navController release];
+	[tNavController release];
 }
 
 - (void)buttonClicked_Segment:(id)sender {
@@ -235,10 +234,10 @@
 
 #pragma mark - ScrollView Delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (INFINITY == _originY)
-		_originY = _textView.contentOffset.y;
+	if (INFINITY == _textViewContentOffsetY)
+		_textViewContentOffsetY = _textView.contentOffset.y;
 	CGRect tFrame = _fontPicker.frame;
-	tFrame.origin.y = _pickerY + (_textView.contentOffset.y - _originY);
+	tFrame.origin.y = _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY);
 	_fontPicker.frame = tFrame;
 }
 
@@ -265,7 +264,7 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView
     numberOfRowsInComponent:(NSInteger)component {
-	return [_pickerArray count];
+	return [_fontSizeList count];
 }
 
 #pragma mark - Picker Delegate
@@ -273,13 +272,13 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component {
-	return [_pickerArray objectAtIndex:row];
+	return [_fontSizeList objectAtIndex:row];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView
       didSelectRow:(NSInteger)row
        inComponent:(NSInteger)component {
-	_fontSize = [[_pickerArray objectAtIndex:row] floatValue];
+	_fontSize = [[_fontSizeList objectAtIndex:row] floatValue];
 	_textView.font = [UIFont fontWithName:_fontName size:_fontSize];
 }
 
@@ -302,7 +301,7 @@
 - (void)dealloc {
 	[_textView release];
 	[_fontPicker release];
-	[_pickerArray release];
+	[_fontSizeList release];
 	[super dealloc];
 }
 

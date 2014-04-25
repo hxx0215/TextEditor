@@ -12,10 +12,11 @@
 @interface KDTableViewController ()
 {
 	NSMutableArray *_fontList;
-	UIBarButtonItem *_editButton;
-	UIBarButtonItem *_resetFontButton;
-	UIBarButtonItem *_cancelButton;
+	UIBarButtonItem *_btnEdit;
+	UIBarButtonItem *_btnResetFont;
+	UIBarButtonItem *_btnCancel;
 	BOOL _editStatus;
+    BOOL _isTableViewSwipeToDelete;
 }
 @end
 
@@ -29,53 +30,54 @@
 	self = [super init];
 	if (self) {
 		_fontName = @"";
-		
+        _isTableViewSwipeToDelete = NO;
+        _editStatus = YES;
 	}
 	return self;
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-    _tableView = [[UITableView alloc] init];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    [self.view addSubview:_tableView];
-    
-    NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
-    [tDefaults synchronize];
-    if (![tDefaults objectForKey:@"kTextEditorFontSet"]) {
-        NSMutableArray *tFontSet = [[NSMutableArray alloc]
-                                    initWithArray:[UIFont familyNames]];
-        [tDefaults setObject:tFontSet forKey:@"kTextEditorFontSet"];
-        [tDefaults synchronize];
-        [tFontSet release];
-    }
-    _fontList = [[NSMutableArray alloc]
-                 initWithArray:[tDefaults objectForKey:@"kTextEditorFontSet"]];
-    
-    
-    self.navigationItem.title = NSLocalizedString(@"Fonts", nil);
-    
-	_editButton = [[UIBarButtonItem alloc]
-	               initWithTitle:NSLocalizedString(@"Edit", nil)
-	                       style:UIBarButtonItemStylePlain
-	                      target:self
-	                      action:@selector(buttonClicked_Edit)];
-	_cancelButton = [[UIBarButtonItem alloc]
-	                 initWithTitle:NSLocalizedString(@"Cancel", nil)
-	                         style:UIBarButtonItemStylePlain
-	                        target:self
-	                        action:@selector(buttonClicked_Cancel)];
+	_tableView = [[UITableView alloc] init];
+	_tableView.dataSource = self;
+	_tableView.delegate = self;
+	[self.view addSubview:_tableView];
 
-	self.navigationItem.rightBarButtonItem = _editButton;
-	self.navigationItem.leftBarButtonItem = _cancelButton;
+	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
+	[tDefaults synchronize];
+	if (![tDefaults objectForKey:@"kTextEditorFontList"]) {
+		NSMutableArray *tFontList = [[NSMutableArray alloc]
+		                            initWithArray:[UIFont familyNames]];
+		[tDefaults setObject:tFontList forKey:@"kTextEditorFontList"];
+		[tDefaults synchronize];
+		[tFontList release];
+	}
+	_fontList = [[NSMutableArray alloc]
+	             initWithArray:[tDefaults objectForKey:@"kTextEditorFontList"]];
 
-	_editStatus = YES;
+	self.navigationItem.title = NSLocalizedString(@"Fonts", nil);
+
+	_btnEdit = [[UIBarButtonItem alloc]
+	            initWithTitle:NSLocalizedString(@"Edit", nil)
+	                    style:UIBarButtonItemStylePlain
+	                   target:self
+	                   action:@selector(buttonClicked_Edit)];
+	_btnCancel = [[UIBarButtonItem alloc]
+	              initWithTitle:NSLocalizedString(@"Cancel", nil)
+	                      style:UIBarButtonItemStylePlain
+	                     target:self
+	                     action:@selector(buttonClicked_Cancel)];
+    self.navigationItem.rightBarButtonItem = _btnEdit;
+	self.navigationItem.leftBarButtonItem = _btnCancel;
+
 }
+
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-    _tableView.frame = self.view.frame;
+
+	_tableView.frame = self.view.bounds;
 }
+
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
@@ -83,19 +85,20 @@
 
 #pragma mark - ButtonClicked
 
-- (void)buttonClicked_Edit{
+- (void)buttonClicked_Edit {
+    if (_isTableViewSwipeToDelete) [self.tableView setEditing:NO animated:YES];
 	if (_editStatus) {
-		_editButton.title = NSLocalizedString(@"Done", nil);
-		_resetFontButton = [[UIBarButtonItem alloc]
-		                    initWithTitle:NSLocalizedString(@"Reset", nil)
-		                            style:UIBarButtonItemStylePlain
-		                           target:self
-		                           action:@selector(buttonClicked_Reset)];
-		self.navigationItem.leftBarButtonItem = _resetFontButton;
+		_btnEdit.title = NSLocalizedString(@"Done", nil);
+		_btnResetFont = [[UIBarButtonItem alloc]
+		                 initWithTitle:NSLocalizedString(@"Reset", nil)
+		                         style:UIBarButtonItemStylePlain
+		                        target:self
+		                        action:@selector(buttonClicked_Reset)];
+		self.navigationItem.leftBarButtonItem = _btnResetFont;
 	}
 	else {
-		_editButton.title = NSLocalizedString(@"Edit", nil);
-		self.navigationItem.leftBarButtonItem = _cancelButton;
+		_btnEdit.title = NSLocalizedString(@"Edit", nil);
+		self.navigationItem.leftBarButtonItem = _btnCancel;
 	}
 	[self.tableView setEditing:_editStatus animated:YES];
 	_editStatus = !_editStatus;
@@ -103,22 +106,22 @@
 
 - (void)buttonClicked_Reset {
 	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
-	NSMutableArray *tFontSet = [[NSMutableArray alloc] initWithArray:[UIFont familyNames]];
-	[tDefaults setObject:tFontSet forKey:@"kTextEditorFontSet"];
+	NSArray *tFontList = [[NSArray alloc] initWithArray:[UIFont familyNames]];
+	[tDefaults setObject:tFontList forKey:@"kTextEditorFontList"];
 	[tDefaults synchronize];
-	[tFontSet release];
 	[_fontList release];
 	_fontList = nil;
 	_fontList = [[NSMutableArray alloc]
-	             initWithArray:[tDefaults objectForKey:@"kTextEditorFontSet"]];
+	             initWithArray:tFontList];
+	[tFontList release];
 	[self.tableView reloadData];
 }
 
-- (void)buttonClicked_Cancel{
-    if (self.textEditorVCtrlDelegate && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)])
-    {
-        [self.textEditorVCtrlDelegate textEditorViewControllerDidDismissModalView:nil];
-    }
+- (void)buttonClicked_Cancel {
+    [_tableView setEditing:NO animated:YES];
+	if (self.textEditorVCtrlDelegate && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)]) {
+		[self.textEditorVCtrlDelegate textEditorViewControllerDidDismissModalView:nil];
+	}
 }
 
 #pragma mark - Rotate
@@ -142,9 +145,9 @@
 	UITableViewCell *tCell = [tableView dequeueReusableCellWithIdentifier:tCellWithIdentifier];
 	if (!tCell) {
 		tCell = [[[UITableViewCell alloc]
-		         initWithStyle:UITableViewCellStyleSubtitle
-		                           reuseIdentifier:tCellWithIdentifier]
-		        autorelease];
+		          initWithStyle:UITableViewCellStyleSubtitle
+		                             reuseIdentifier:tCellWithIdentifier]
+		         autorelease];
 	}
 	if (0 == indexPath.section) {
 		NSUInteger row = [indexPath row];
@@ -171,21 +174,19 @@
 	UITableViewCell *tCell = [tableView cellForRowAtIndexPath:indexPath];
 	tCell.accessoryType = UITableViewCellAccessoryCheckmark;
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    if (self.textEditorVCtrlDelegate  && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)]) {
-        [self.textEditorVCtrlDelegate
-         textEditorViewControllerDidDismissModalView:[_fontList objectAtIndex:[indexPath row]]];
-    }
-	
+	if (self.textEditorVCtrlDelegate  && [self.textEditorVCtrlDelegate respondsToSelector:@selector(textEditorViewControllerDidDismissModalView:)]) {
+		[self.textEditorVCtrlDelegate
+		 textEditorViewControllerDidDismissModalView:[_fontList objectAtIndex:[indexPath row]]];
+	}
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
 	return YES;
 }
 
-- (void)     tableView:(UITableView *)tableView
+- (void)tableView:(UITableView *)tableView
     moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
-           toIndexPath:(NSIndexPath *)toIndexPath {
+    toIndexPath:(NSIndexPath *)toIndexPath {
 	NSUInteger tFromRow = [fromIndexPath row];
 	NSUInteger tToRow = [toIndexPath row];
 
@@ -195,28 +196,40 @@
 	[object release];
 
 	NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
-	[tDefaults setObject:_fontList forKey:@"kTextEditorFontSet"];
+	[tDefaults setObject:_fontList forKey:@"kTextEditorFontList"];
 	[tDefaults synchronize];
 }
 
-- (void)     tableView:(UITableView *)tableView
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //if (_editStatus) _btnEdit.enabled = NO;
+    _isTableViewSwipeToDelete = YES;
+}
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //if (_editStatus) _btnEdit.enabled =YES;
+    _isTableViewSwipeToDelete = NO;
+}
+
+- (void)tableView:(UITableView *)tableView
     commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-     forRowAtIndexPath:(NSIndexPath *)indexPath {
+    forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSUInteger tRow = [indexPath row];
 		UITableViewCell *tCell = [self.tableView cellForRowAtIndexPath:indexPath];
 		if (UITableViewCellAccessoryCheckmark == tCell.accessoryType) {
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert", nil)
-			                                                 message:NSLocalizedString(@"AlertMessage", nil)
-			                                                delegate:nil
-			                                       cancelButtonTitle:NSLocalizedString(@"OK", nil)
-			                                       otherButtonTitles:nil] autorelease];
+			UIAlertView *alert = [[[UIAlertView alloc]
+			                       initWithTitle:NSLocalizedString(@"Alert", nil)
+			                                    message:NSLocalizedString(@"AlertMessage", nil)
+			                                   delegate:nil
+			                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
+			                          otherButtonTitles:nil] autorelease];
 			[alert show];
 			return;
 		}
 		[_fontList removeObjectAtIndex:tRow];
 		NSUserDefaults *tDefaults = [NSUserDefaults standardUserDefaults];
-		[tDefaults setObject:_fontList forKey:@"kTextEditorFontSet"];
+		[tDefaults setObject:_fontList forKey:@"kTextEditorFontList"];
 		[tDefaults synchronize];
 		[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 	}
@@ -224,10 +237,11 @@
 
 - (void)dealloc {
 	_textEditorVCtrlDelegate = nil;
+	[_tableView release];
 	[_fontList release];
-	[_editButton release];
-	[_cancelButton release];
-	[_resetFontButton release];
+	[_btnEdit release];
+	[_btnCancel release];
+	[_btnResetFont release];
 	[super dealloc];
 }
 

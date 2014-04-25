@@ -202,12 +202,10 @@
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //if (_editStatus) _btnEdit.enabled = NO;
     _isTableViewSwipeToDelete = YES;
 }
 - (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //if (_editStatus) _btnEdit.enabled =YES;
     _isTableViewSwipeToDelete = NO;
 }
 

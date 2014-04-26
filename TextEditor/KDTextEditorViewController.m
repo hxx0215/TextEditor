@@ -15,6 +15,8 @@
 	UIPickerView *_fontPicker;
 	NSArray *_fontSizeList;
     NSString *_fontName;
+    CGRect _originalContentViewFrame;
+    CGFloat _originalContentOffsetY;
 	CGFloat _fontSize;
 	CGFloat _textViewContentOffsetY;
 	CGFloat _pickerY;
@@ -42,62 +44,73 @@
 	// Do any additional setup after loading the view.
 	self.title = @"TextEditor";
 	CGSize tImgSize = CGSizeMake(20, 20);
-	UIImage *tFonts = [self imageScale:[UIImage imageNamed:@"font"] toSize:tImgSize];
-	UIBarButtonItem *tBtnFont = [[UIBarButtonItem alloc]
-	                                  initWithImage:tFonts
+	UIImage *tImgFonts = [self imageScale:[UIImage imageNamed:@"font"] toSize:tImgSize];
+	UIBarButtonItem *tBtnFontList = [[UIBarButtonItem alloc]
+	                                  initWithImage:tImgFonts
 	                                          style:UIBarButtonItemStylePlain
 	                                         target:self
 	                                         action:@selector(buttonClicked_Font)];
-	self.navigationItem.rightBarButtonItem = tBtnFont;
-	[tBtnFont release];
-
-	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
-	_textView.delegate = self;
-	[self.view addSubview:_textView];
-	_textViewContentOffsetY = INFINITY;
-
-	//NSArray *array = [NSArray arrayWithObjects:@"左对齐", @"居中", @"右对齐", nil];
-	UISegmentedControl *tSegment = [[UISegmentedControl alloc]initWithItems:nil];
-	UIImage *tAlignLeft = [self imageScale:[UIImage imageNamed:@"paragraph-left.png"]
-	                                toSize:tImgSize];
-	UIImage *tAlignCenter = [self imageScale:[UIImage imageNamed:@"paragraph-center.png"]
-	                                  toSize:tImgSize];
-	UIImage *tAlignRight = [self imageScale:[UIImage imageNamed:@"paragraph-right.png"]
-	                                 toSize:tImgSize];
-	[tSegment insertSegmentWithImage:tAlignLeft atIndex:0 animated:YES];
-	[tSegment insertSegmentWithImage:tAlignCenter atIndex:1 animated:YES];
-	[tSegment insertSegmentWithImage:tAlignRight atIndex:2 animated:YES];
-	tSegment.segmentedControlStyle = UISegmentedControlStyleBar;
-	tSegment.frame = CGRectMake(0, 0, 60, 30);
-	[tSegment addTarget:self
-	              action:@selector(buttonClicked_Segment:)
-	    forControlEvents:UIControlEventValueChanged];
-	tSegment.selectedSegmentIndex = 0;
-	self.navigationItem.titleView = tSegment;
-	[tSegment release];
-
-	UIImage *tFontSize = [self imageScale:[UIImage imageNamed:@"fontsize"]
-	                               toSize:tImgSize];
+	self.navigationItem.rightBarButtonItem = tBtnFontList;
+	[tBtnFontList release];
+    
+    UIImage *tImgFontSize = [self imageScale:[UIImage imageNamed:@"fontsize"]
+                                      toSize:tImgSize];
 	UIBarButtonItem *tBtnFontSize = [[UIBarButtonItem alloc]
-	                                   initWithImage:tFontSize
-	                                           style:UIBarButtonItemStylePlain
-	                                          target:self
-	                                          action:@selector(buttonClicked_FontSize)];
+                                     initWithImage:tImgFontSize
+                                     style:UIBarButtonItemStylePlain
+                                     target:self
+                                     action:@selector(buttonClicked_FontSize)];
 	self.navigationItem.leftBarButtonItem = tBtnFontSize;
 	[tBtnFontSize release];
 
-	_fontPicker = [[UIPickerView alloc] init];
+	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
+	_textView.delegate = self;
+    _textView.contentInset = UIEdgeInsetsZero;
+	[self.view addSubview:_textView];
+	_textViewContentOffsetY = INFINITY;
+
+    [self segmentedInit];
+    
+    [self fontPickerInit];
+    
+    [self registerForKeyboardNotifications];
+    
+	if ([self isiPhone]) {
+		[self addDismissButtontoKeyBoard];
+	}
+}
+
+- (void)segmentedInit{
+    CGSize tImgSize = CGSizeMake(20, 20);
+    UISegmentedControl *tSegment = [[UISegmentedControl alloc]initWithItems:nil];
+	UIImage *tImgAlignLeft = [self imageScale:[UIImage imageNamed:@"paragraph-left.png"]
+                                       toSize:tImgSize];
+	UIImage *tImgAlignCenter = [self imageScale:[UIImage imageNamed:@"paragraph-center.png"]
+                                         toSize:tImgSize];
+	UIImage *tImgAlignRight = [self imageScale:[UIImage imageNamed:@"paragraph-right.png"]
+                                        toSize:tImgSize];
+	[tSegment insertSegmentWithImage:tImgAlignLeft atIndex:0 animated:YES];
+	[tSegment insertSegmentWithImage:tImgAlignCenter atIndex:1 animated:YES];
+	[tSegment insertSegmentWithImage:tImgAlignRight atIndex:2 animated:YES];
+	tSegment.segmentedControlStyle = UISegmentedControlStyleBar;
+	tSegment.frame = CGRectMake(0, 0, 60, 30);
+	[tSegment addTarget:self
+                 action:@selector(buttonClicked_Segment:)
+       forControlEvents:UIControlEventValueChanged];
+	tSegment.selectedSegmentIndex = 0;
+	self.navigationItem.titleView = tSegment;
+	[tSegment release];
+}
+
+- (void)fontPickerInit{
+    _fontPicker = [[UIPickerView alloc] init];
 	_fontPicker.showsSelectionIndicator = YES;
 	_fontPicker.delegate = self;
 	_fontPicker.dataSource = self;
 	_fontPicker.hidden = YES;
     _fontPicker.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
-    
 	[_fontPicker selectRow:4 inComponent:0 animated:YES];
 	[_textView addSubview:_fontPicker];
-	if ([self isiPhone]) {
-		[self addDismissButtontoKeyBoard];
-	}
 }
 
 - (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -114,7 +127,14 @@
 	_fontPicker.frame = CGRectMake(0, tPickerY, tScreen.size.width, tFontPickerHeight);
 
     _textView.frame = tScreen;
+    _originalContentViewFrame = _textView.frame;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     
+    UIInterfaceOrientation tToInterfaceO = [UIApplication sharedApplication].statusBarOrientation;
+	[self updateCurInterface:tToInterfaceO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -163,10 +183,7 @@
 - (void)buttonClicked_Font {
 	KDTableViewController *tTableVC = [[KDTableViewController alloc] init];
 	tTableVC.textEditorVCtrlDelegate = self;
-    
 	tTableVC.fontName = _fontName;
-    
-    
     
 	KDTextEditorNavigationController *tNavController =
     [[KDTextEditorNavigationController alloc] initWithRootViewController:tTableVC];
@@ -215,6 +232,77 @@
 	_fontPicker.hidden = !_fontPicker.hidden;
 }
 
+- (void)registerForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(keyboardWasShow:)
+                                                name:UIKeyboardDidShowNotification
+                                              object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                            selector:@selector(keyboardWillBeHidden:)
+                                                name:UIKeyboardWillHideNotification
+                                              object:nil];
+}
+
+- (void)unregisterForKeyboardNotifications{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                   name:UIKeyboardDidShowNotification
+                                                 object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                   name:UIKeyboardWillHideNotification
+                                                 object:nil];
+}
+- (void)keyboardWasShow:(NSNotification *)notification {
+    // 取得键盘的frame，注意，因为键盘在window的层面弹出来的，所以它的frame坐标也是对应window窗口的。
+    CGRect endRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGPoint endOrigin = endRect.origin;
+    // 把键盘的frame坐标系转换到与UITextView一致的父view上来。
+    if ([UIApplication sharedApplication].keyWindow && self.textView.superview) {
+        endOrigin = [self.textView.superview convertPoint:endRect.origin
+                                                 fromView:[UIApplication sharedApplication].keyWindow];
+    }
+    _originalContentViewFrame = self.textView.frame;
+    _originalContentOffsetY = self.textView.contentOffset.y;
+    
+    CGFloat adjustHeight = _originalContentViewFrame.origin.y + _originalContentViewFrame.size.height;
+    // 根据相对位置调整一下大小，自己画图比划一下就知道为啥要这样计算。
+    // 当然用其他的调整方式也是可以的，比如取UITextView的orgin，origin到键盘origin之间的高度作为UITextView的高度也是可以的。
+    adjustHeight -= endOrigin.y;
+    if (adjustHeight > 0) {
+        
+        CGRect newRect = _originalContentViewFrame;
+        newRect.size.height -= adjustHeight;
+        [UIView beginAnimations:nil context:nil];
+        self.textView.frame = newRect;
+        NSLog(@"%@",NSStringFromCGPoint(_textView.contentOffset));
+        [UIView commitAnimations];
+    }
+    /*NSValue *keyboardFrameValue = [notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardFrame = [keyboardFrameValue CGRectValue];
+    
+    UIEdgeInsets contentInsets = self.textView.contentInset;
+    contentInsets.bottom = CGRectGetHeight(keyboardFrame);
+    
+    self.textView.contentInset = contentInsets;
+    self.textView.scrollIndicatorInsets = contentInsets;*/
+}
+
+- (void)keyboardWillBeHidden:(NSNotification *)notification{
+    // 恢复原理的大小
+    NSLog(@"%@",NSStringFromCGPoint(_textView.contentOffset));
+    [UIView beginAnimations:nil context:nil];
+    CGRect tTextViewFrame = self.textView.frame;
+    if (tTextViewFrame.origin.y>tTextViewFrame.size.height)
+    _originalContentViewFrame.origin.y = tTextViewFrame.origin.y +
+        _textView.contentOffset.y - _originalContentOffsetY;
+    self.textView.frame = _originalContentViewFrame;
+
+    [UIView commitAnimations];
+    /*UIEdgeInsets contentInsets = self.textView.contentInset;
+    contentInsets.bottom = .0;
+    
+    self.textView.contentInset = contentInsets;
+    self.textView.scrollIndicatorInsets = contentInsets;*/
+}
 #pragma mark - KDTextEditorViewControllerDelegate
 - (void)textEditorViewControllerDidDismissModalView:(NSString *)font {
     if (font)
@@ -222,6 +310,8 @@
         _fontName = font;
         _textView.font = [UIFont fontWithName:font size:_fontSize];
     }
+    
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -229,6 +319,7 @@
 #pragma mark - TextView Delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
 	_fontPicker.hidden = YES;
+    
 	return YES;
 }
 
@@ -302,6 +393,7 @@
 	[_textView release];
 	[_fontPicker release];
 	[_fontSizeList release];
+    [self unregisterForKeyboardNotifications];
 	[super dealloc];
 }
 

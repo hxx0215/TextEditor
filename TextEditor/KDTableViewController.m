@@ -55,8 +55,6 @@
 	_fontList = [[NSMutableArray alloc]
 	             initWithArray:[tDefaults objectForKey:@"kTextEditorFontList"]];
 
-	self.navigationItem.title = NSLocalizedString(@"Fonts", nil);
-
 	_btnEdit = [[UIBarButtonItem alloc]
 	            initWithTitle:NSLocalizedString(@"Edit", nil)
 	                    style:UIBarButtonItemStylePlain
@@ -69,13 +67,19 @@
 	                     action:@selector(buttonClicked_Cancel)];
     self.navigationItem.rightBarButtonItem = _btnEdit;
 	self.navigationItem.leftBarButtonItem = _btnCancel;
-
+    
+    self.navigationItem.title = NSLocalizedString(@"Fonts", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 
 	_tableView.frame = self.view.bounds;
+}
+- (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
+    //NSLog(@"%@",NSStringFromCGRect(self.view.bounds));
+    _tableView.frame = self.view.bounds;
+    [_tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -134,6 +138,11 @@
 	return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                         duration:(NSTimeInterval)duration {
+	[self updateCurInterface:toInterfaceOrientation];
+}
+
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [_fontList count];
@@ -153,7 +162,7 @@
 		NSUInteger row = [indexPath row];
 		tCell.textLabel.text = [_fontList objectAtIndex:row];
 		tCell.textLabel.font = [UIFont fontWithName:tCell.textLabel.text size:20.0];
-
+       // NSLog(@"%@",NSStringFromCGRect(_tableView.frame));
 		if ([tCell.textLabel.text isEqualToString:_fontName]) {
 			tCell.accessoryType = UITableViewCellAccessoryCheckmark;
 		}

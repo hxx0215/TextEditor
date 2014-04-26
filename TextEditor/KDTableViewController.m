@@ -73,9 +73,19 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-
-	_tableView.frame = self.view.bounds;
+    
+    UIInterfaceOrientation tCurInter = [UIApplication sharedApplication].statusBarOrientation;
+    [self updateCurInterface:tCurInter];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    UIInterfaceOrientation tCurInter = [UIApplication sharedApplication].statusBarOrientation;
+    [self updateCurInterface:tCurInter];
+}
+
 - (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
     //NSLog(@"%@",NSStringFromCGRect(self.view.bounds));
     _tableView.frame = self.view.bounds;
@@ -244,7 +254,11 @@
 
 - (void)dealloc {
 	_textEditorVCtrlDelegate = nil;
+    
+    _tableView.dataSource = nil;
+    _tableView.delegate = nil;
 	[_tableView release];
+    
 	[_fontList release];
 	[_btnEdit release];
 	[_btnCancel release];

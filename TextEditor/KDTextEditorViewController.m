@@ -368,7 +368,10 @@
 }
 
 - (void)dealloc {
+    _textView.delegate = nil;
 	[_textView release];
+    
+    _fontPicker.delegate = nil;
 	[_fontPicker release];
 	[_fontSizeList release];
     [self unregisterForKeyboardNotifications];

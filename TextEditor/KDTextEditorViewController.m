@@ -16,10 +16,7 @@
 	NSArray *_fontSizeList;
     NSString *_fontName;
     CGRect _originalContentViewFrame;
-    CGFloat _originalContentOffsetY;
 	CGFloat _fontSize;
-	CGFloat _textViewContentOffsetY;
-	CGFloat _pickerY;
 }
 @end
 
@@ -65,9 +62,7 @@
 
 	_textView = [[[UITextView alloc] initWithFrame:self.view.frame] autorelease];
 	_textView.delegate = self;
-    _textView.contentInset = UIEdgeInsetsZero;
 	[self.view addSubview:_textView];
-	_textViewContentOffsetY = INFINITY;
 
     [self segmentedInit];
     
@@ -110,7 +105,7 @@
 	_fontPicker.hidden = YES;
     _fontPicker.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
 	[_fontPicker selectRow:4 inComponent:0 animated:YES];
-	[_textView addSubview:_fontPicker];
+	[self.view addSubview:_fontPicker];
 }
 
 - (void)updateCurInterface:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -121,13 +116,24 @@
 		tScreen.size.width = tExchange;
 	}
 	CGFloat tFontPickerHeight = 216;
-	_pickerY = tScreen.size.height - tFontPickerHeight;
-	CGFloat tPickerY = _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY) >
-	    100 ? _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY) : _pickerY;
+	CGFloat tPickerY = tScreen.size.height - tFontPickerHeight;
+
 	_fontPicker.frame = CGRectMake(0, tPickerY, tScreen.size.width, tFontPickerHeight);
 
     _textView.frame = tScreen;
     _originalContentViewFrame = _textView.frame;
+    
+    if (!_fontPicker.hidden)
+    {
+        [self resizeTextViewByFontPicker];
+    }
+
+}
+- (void)resizeTextViewByFontPicker
+{
+    CGRect tFrame = _textView.frame;
+    tFrame.size.height -= _fontPicker.frame.size.height;
+    _textView.frame = tFrame;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -230,9 +236,16 @@
 - (void)buttonClicked_FontSize {
 	[_textView resignFirstResponder];
 	_fontPicker.hidden = !_fontPicker.hidden;
+    if (!_fontPicker.hidden)
+    {
+        [self resizeTextViewByFontPicker];
+    }
+    else _textView.frame= _originalContentViewFrame;
 }
 
+#pragma mark - KeyboardNotifications
 - (void)registerForKeyboardNotifications {
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                             selector:@selector(keyboardWasShow:)
                                                 name:UIKeyboardDidShowNotification
@@ -252,20 +265,14 @@
                                                  object:nil];
 }
 - (void)keyboardWasShow:(NSNotification *)notification {
-    // 取得键盘的frame，注意，因为键盘在window的层面弹出来的，所以它的frame坐标也是对应window窗口的。
     CGRect endRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGPoint endOrigin = endRect.origin;
-    // 把键盘的frame坐标系转换到与UITextView一致的父view上来。
     if ([UIApplication sharedApplication].keyWindow && self.textView.superview) {
         endOrigin = [self.textView.superview convertPoint:endRect.origin
                                                  fromView:[UIApplication sharedApplication].keyWindow];
     }
-    _originalContentViewFrame = self.textView.frame;
-    _originalContentOffsetY = self.textView.contentOffset.y;
     
     CGFloat adjustHeight = _originalContentViewFrame.origin.y + _originalContentViewFrame.size.height;
-    // 根据相对位置调整一下大小，自己画图比划一下就知道为啥要这样计算。
-    // 当然用其他的调整方式也是可以的，比如取UITextView的orgin，origin到键盘origin之间的高度作为UITextView的高度也是可以的。
     adjustHeight -= endOrigin.y;
     if (adjustHeight > 0) {
         
@@ -273,36 +280,16 @@
         newRect.size.height -= adjustHeight;
         [UIView beginAnimations:nil context:nil];
         self.textView.frame = newRect;
-        NSLog(@"%@",NSStringFromCGPoint(_textView.contentOffset));
         [UIView commitAnimations];
     }
-    /*NSValue *keyboardFrameValue = [notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
-    CGRect keyboardFrame = [keyboardFrameValue CGRectValue];
-    
-    UIEdgeInsets contentInsets = self.textView.contentInset;
-    contentInsets.bottom = CGRectGetHeight(keyboardFrame);
-    
-    self.textView.contentInset = contentInsets;
-    self.textView.scrollIndicatorInsets = contentInsets;*/
 }
 
 - (void)keyboardWillBeHidden:(NSNotification *)notification{
-    // 恢复原理的大小
-    NSLog(@"%@",NSStringFromCGPoint(_textView.contentOffset));
     [UIView beginAnimations:nil context:nil];
-    CGRect tTextViewFrame = self.textView.frame;
-    if (tTextViewFrame.origin.y>tTextViewFrame.size.height)
-    _originalContentViewFrame.origin.y = tTextViewFrame.origin.y +
-        _textView.contentOffset.y - _originalContentOffsetY;
     self.textView.frame = _originalContentViewFrame;
-
     [UIView commitAnimations];
-    /*UIEdgeInsets contentInsets = self.textView.contentInset;
-    contentInsets.bottom = .0;
-    
-    self.textView.contentInset = contentInsets;
-    self.textView.scrollIndicatorInsets = contentInsets;*/
 }
+
 #pragma mark - KDTextEditorViewControllerDelegate
 - (void)textEditorViewControllerDidDismissModalView:(NSString *)font {
     if (font)
@@ -319,17 +306,8 @@
 #pragma mark - TextView Delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
 	_fontPicker.hidden = YES;
-    
+    _textView.frame = _originalContentViewFrame;
 	return YES;
-}
-
-#pragma mark - ScrollView Delegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	if (INFINITY == _textViewContentOffsetY)
-		_textViewContentOffsetY = _textView.contentOffset.y;
-	CGRect tFrame = _fontPicker.frame;
-	tFrame.origin.y = _pickerY + (_textView.contentOffset.y - _textViewContentOffsetY);
-	_fontPicker.frame = tFrame;
 }
 
 #pragma mark - Rotate

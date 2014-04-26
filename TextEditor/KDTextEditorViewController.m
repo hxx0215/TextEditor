@@ -376,6 +376,10 @@
 	[_fontSizeList release];
     [self unregisterForKeyboardNotifications];
 	[super dealloc];
+    
+    
+    
+    
 }
 
 @end
